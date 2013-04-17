@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2, 
+
+  "name": "Contextly", 
+  "description": "Design the web. Simply.", 
+  "version": "0.1", 
+
+  "browser_action": {
+    "default_icon": "icon48.png", 
+    "default_popup": "popup.html"
+  }, 
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["jquery-1.9.1.min.js", "contentscript.js"]
+    }
+  ],
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+  
+  "permissions": [
+    "tabs", "http://*/*", "https://*/*"
+  ]
+
+}
