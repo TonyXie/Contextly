@@ -3,8 +3,15 @@ $(document).ready ->
    # message listener 
   chrome.extension.onMessage.addListener (request, sender, sendResponse) -> 
 
+    # method for loading bootstrap into current page
+    if request.action is "loadBootstrap"
+
+      # inject bootstrap 
+      $("head").append("<link href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css' rel='stylesheet'>");
+
     # method for adding wrapping parent nodes with specific classes
     if request.action is "changeElement"
+
       # add wrapping div to selected element
       $(request.element).wrap('<div class=' + '"' + request.changeClass + '"' + ' />')
 

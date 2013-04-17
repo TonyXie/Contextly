@@ -1,5 +1,10 @@
 $(document).ready ->
 
+  # load bootstrap onto page 
+  $('#loadBootstrap').click (e) -> 
+    e.preventDefault()
+    bkg.loadBootstrap()
+
   # Prendez la page de background
   bkg = chrome.extension.getBackgroundPage()
 

@@ -4,6 +4,9 @@
   $(document).ready(function() {
     chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
       var element, font;
+      if (request.action === "loadBootstrap") {
+        $("head").append("<link href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css' rel='stylesheet'>");
+      }
       if (request.action === "changeElement") {
         $(request.element).wrap('<div class=' + '"' + request.changeClass + '"' + ' />');
       }

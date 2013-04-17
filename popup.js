@@ -3,6 +3,10 @@
 
   $(document).ready(function() {
     var bkg;
+    $('#loadBootstrap').click(function(e) {
+      e.preventDefault();
+      return bkg.loadBootstrap();
+    });
     bkg = chrome.extension.getBackgroundPage();
     $("#elementSelectedText").val("h1");
     $('#changeElement').click(function(e) {

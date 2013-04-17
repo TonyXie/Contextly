@@ -6,6 +6,14 @@
     return element = request.element;
   });
 
+  this.loadBootstrap = function() {
+    return chrome.tabs.getSelected(null, function(tab) {
+      return chrome.tabs.sendMessage(tab.id, {
+        action: "loadBootstrap"
+      });
+    });
+  };
+
   this.changeFont = function(element, font) {
     return chrome.tabs.getSelected(null, function(tab) {
       return chrome.tabs.sendMessage(tab.id, {
