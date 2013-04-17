@@ -3,17 +3,31 @@
 
   $(document).ready(function() {
     chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-      var element, font;
+      var changeClass, element, font, text;
       if (request.action === "loadBootstrap") {
-        $("head").append("<link href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css' rel='stylesheet'>");
+        $("head").append("          <link href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css' rel='stylesheet'>        ");
+        $('body').wrap('<div class="container" />');
       }
       if (request.action === "changeElement") {
-        $(request.element).wrap('<div class=' + '"' + request.changeClass + '"' + ' />');
+        element = request.element;
+        changeClass = request.changeClass;
+        if (changeClass === "navbar") {
+          $(element).wrap('<div class="navbar" />');
+          $(element).addClass('brand');
+          $(element).wrap('<div class="navbar-inner" />');
+          $(".navbar-inner").append('<ul class="nav"></ul>');
+        } else if (changeClass === "nav") {
+          text = $(element).text();
+          $(element).remove();
+          $('ul.nav').append("<li><a href='#'>" + text + "</a></li>");
+        } else {
+          $(element).wrap('<div class=' + '"' + changeClass + '"' + ' />');
+        }
       }
       if (request.action === "changeFont") {
         font = request.font;
         element = request.element;
-        $("head").append("<link href='http://fonts.googleapis.com/css?family=" + font + "' rel='stylesheet' type='text/css'>");
+        $("head").append("        <link href='http://fonts.googleapis.com/css?family=" + font + "' rel='stylesheet' type='text/css'>        ");
         font = font.split("+").join(" ");
         $(request.element).css;
         return $(element).css('font-family', font);

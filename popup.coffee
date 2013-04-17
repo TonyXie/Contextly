@@ -23,4 +23,4 @@ $(document).ready ->
     e.preventDefault()
     font = $('#font-list').val()
     element = $("#elementSelectedText").val()
-    bkg.changeFont(element, font)
+    bkg.changeFont(element, font) 

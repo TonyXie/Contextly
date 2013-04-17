@@ -1,3 +1,6 @@
+# variables for po
+
+
 chrome.extension.onMessage.addListener (request, sender, sendResponse) -> 
   element = request.element
 
