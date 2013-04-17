@@ -6,12 +6,12 @@
     return element = request.element;
   });
 
-  this.changeFont = function(font, element) {
+  this.changeFont = function(element, font) {
     return chrome.tabs.getSelected(null, function(tab) {
       return chrome.tabs.sendMessage(tab.id, {
         action: "changeFont",
-        font: font,
-        element: element
+        element: element,
+        font: font
       });
     });
   };

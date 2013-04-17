@@ -3,8 +3,17 @@
 
   $(document).ready(function() {
     chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+      var element, font;
       if (request.action === "changeElement") {
-        return $(request.element).wrap('<div class=' + '"' + request.changeClass + '"' + ' />');
+        $(request.element).wrap('<div class=' + '"' + request.changeClass + '"' + ' />');
+      }
+      if (request.action === "changeFont") {
+        font = request.font;
+        element = request.element;
+        $("head").append("<link href='http://fonts.googleapis.com/css?family=" + font + "' rel='stylesheet' type='text/css'>");
+        font = font.split("+").join(" ");
+        $(request.element).css;
+        return $(element).css('font-family', font);
       }
     });
     $('h1').click(function(e) {

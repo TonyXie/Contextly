@@ -5,13 +5,9 @@ chrome.extension.onMessage.addListener (request, sender, sendResponse) ->
 # function xyz instead of var xyz = function, you have to 
 # bind the function to the window or this, which is 
 # represented by @ in coffee. Took awhile =.=
-@changeFont = (font, element) ->
+@changeFont = (element, font) ->
   chrome.tabs.getSelected null, (tab) ->
-    chrome.tabs.sendMessage tab.id,
-      action: "changeFont"
-      font: font
-      element: element
-
+    chrome.tabs.sendMessage(tab.id, {action: "changeFont", element: element, font: font})
 
 @changeColor = (element, color) ->
   chrome.tabs.getSelected null, (tab) ->

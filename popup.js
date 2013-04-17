@@ -5,12 +5,19 @@
     var bkg;
     bkg = chrome.extension.getBackgroundPage();
     $("#elementSelectedText").val("h1");
-    return $('#changeElement').click(function(e) {
+    $('#changeElement').click(function(e) {
       var changeClass, element;
       e.preventDefault();
       element = $("#elementSelectedText").val();
       changeClass = $("#class-list").val();
       return bkg.changeElement(element, changeClass);
+    });
+    return $('#font-style').click(function(e) {
+      var element, font;
+      e.preventDefault();
+      font = $('#font-list').val();
+      element = $("#elementSelectedText").val();
+      return bkg.changeFont(element, font);
     });
   });
 
