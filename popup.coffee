@@ -1,5 +1,4 @@
 $(document).ready ->
-$(document).ready ->
 
   # Prendez la page de background
   bkg = chrome.extension.getBackgroundPage()
@@ -12,6 +11,4 @@ $(document).ready ->
     e.preventDefault(); 
     element = $("#elementSelectedText").val()
     changeClass = $("#class-list").val()
-    bkg.test()
-    bkg.changeFont("raleway", "h1")
     bkg.changeElement(element, changeClass)

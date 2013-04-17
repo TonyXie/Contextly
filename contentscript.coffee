@@ -1,5 +1,12 @@
 $(document).ready ->
 
+   # message listener 
+  chrome.extension.onMessage.addListener (request, sender, sendResponse) -> 
+    if request.action is "changeElement"
+      # add wrapping div to selected element
+      $(request.element).wrap('<div class=' + '"' + request.changeClass + '"' + ' />')
+
+
   $('h1').click (e) -> 
     chrome.extension.sendMessage {
       # get tag name
@@ -23,7 +30,3 @@ $(document).ready ->
       # get tag name
       "element": "p"
     }
-
-  # message listener 
-  chrome.extension.onMessage.addListener (request, sender, sendResponse) -> 
-    alert "got message"

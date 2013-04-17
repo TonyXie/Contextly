@@ -2,6 +2,11 @@
 (function() {
 
   $(document).ready(function() {
+    chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+      if (request.action === "changeElement") {
+        return $(request.element).wrap('<div class=' + '"' + request.changeClass + '"' + ' />');
+      }
+    });
     $('h1').click(function(e) {
       return chrome.extension.sendMessage({
         "element": "h1"
@@ -17,13 +22,10 @@
         "element": "h3"
       });
     });
-    $('p').click(function(e) {
+    return $('p').click(function(e) {
       return chrome.extension.sendMessage({
         "element": "p"
       });
-    });
-    return chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-      return alert("got message");
     });
   });
 
