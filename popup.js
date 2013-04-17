@@ -3,4 +3,19 @@
 
   $(document).ready(function() {});
 
+  $(document).ready(function() {
+    var bkg;
+    bkg = chrome.extension.getBackgroundPage();
+    $("#elementSelectedText").val("h1");
+    return $('#changeElement').click(function(e) {
+      var changeClass, element;
+      e.preventDefault();
+      element = $("#elementSelectedText").val();
+      changeClass = $("#class-list").val();
+      bkg.test();
+      bkg.changeFont("raleway", "h1");
+      return bkg.changeElement(element, changeClass);
+    });
+  });
+
 }).call(this);

@@ -17,10 +17,13 @@
         "element": "h3"
       });
     });
-    return $('p').click(function(e) {
+    $('p').click(function(e) {
       return chrome.extension.sendMessage({
         "element": "p"
       });
+    });
+    return chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+      return alert("got message");
     });
   });
 

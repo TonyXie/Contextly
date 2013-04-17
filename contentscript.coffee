@@ -23,3 +23,7 @@ $(document).ready ->
       # get tag name
       "element": "p"
     }
+
+  # message listener 
+  chrome.extension.onMessage.addListener (request, sender, sendResponse) -> 
+    alert "got message"
