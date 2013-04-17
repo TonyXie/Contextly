@@ -1,8 +1,8 @@
-# variables for po
-
+# variables for popup to retrieve
+popupVars = new Object() 
 
 chrome.extension.onMessage.addListener (request, sender, sendResponse) -> 
-  element = request.element
+  popupVars.element = request.element
 
 # interesting coffeescript idiom -- in order to get 
 # function xyz instead of var xyz = function, you have to 
@@ -28,3 +28,7 @@ chrome.extension.onMessage.addListener (request, sender, sendResponse) ->
 @changeElement = (element, changeClass)  -> 
   chrome.tabs.getSelected null, (tab) -> 
     chrome.tabs.sendMessage(tab.id, {action: "changeElement", element: element, changeClass: changeClass})
+
+# methods for popup to retrieve variables from background 
+@getpopupVars = -> 
+  popupVars

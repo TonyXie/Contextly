@@ -63,26 +63,9 @@ $(document).ready ->
       $(element).css('font-family', font)
 
 
-  $('h1').click (e) -> 
+  # get clicked tags
+  $('h1, h2, h3, p, a').click (e) -> 
     chrome.extension.sendMessage {
       # get tag name
-      "element": "h1"
-    }
-
-  $('h2').click (e) -> 
-    chrome.extension.sendMessage {
-      # get tag name
-      "element": "h2"
-    }
-
-  $('h3').click (e) -> 
-    chrome.extension.sendMessage {
-      # get tag name
-      "element": "h3"
-    }
-
-  $('p').click (e) -> 
-    chrome.extension.sendMessage {
-      # get tag name
-      "element": "p"
+      "element": $(this).prop("tagName").toLowerCase()
     }

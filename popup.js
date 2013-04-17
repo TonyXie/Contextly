@@ -8,7 +8,15 @@
       return bkg.loadBootstrap();
     });
     bkg = chrome.extension.getBackgroundPage();
-    $("#elementSelectedText").val("h1");
+    $('#getPageElement').click(function(e) {
+      var popupVars;
+      popupVars = bkg.getpopupVars();
+      if (popupVars.element != null) {
+        return $("#elementSelectedText").val(popupVars.element);
+      } else {
+        return $("#elementSelectedText").val("h1");
+      }
+    });
     $('#changeElement').click(function(e) {
       var changeClass, element;
       e.preventDefault();

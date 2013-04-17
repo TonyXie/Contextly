@@ -33,24 +33,9 @@
         return $(element).css('font-family', font);
       }
     });
-    $('h1').click(function(e) {
+    return $('h1, h2, h3, p, a').click(function(e) {
       return chrome.extension.sendMessage({
-        "element": "h1"
-      });
-    });
-    $('h2').click(function(e) {
-      return chrome.extension.sendMessage({
-        "element": "h2"
-      });
-    });
-    $('h3').click(function(e) {
-      return chrome.extension.sendMessage({
-        "element": "h3"
-      });
-    });
-    return $('p').click(function(e) {
-      return chrome.extension.sendMessage({
-        "element": "p"
+        "element": $(this).prop("tagName").toLowerCase()
       });
     });
   });

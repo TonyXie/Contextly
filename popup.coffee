@@ -9,7 +9,13 @@ $(document).ready ->
   bkg = chrome.extension.getBackgroundPage()
 
   # Changez le value de la bois de texte
-  $("#elementSelectedText").val("h1")
+  # see if the user has clicked an element on the page
+  $('#getPageElement').click (e) -> 
+    popupVars = bkg.getpopupVars()
+    if popupVars.element?
+      $("#elementSelectedText").val(popupVars.element)
+    else 
+      $("#elementSelectedText").val("h1")
 
   # append class to selected element
   $('#changeElement').click (e) -> 
