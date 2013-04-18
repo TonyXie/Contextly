@@ -71,16 +71,22 @@ $(document).ready ->
       # change color
       $(element).css('color', color)
 
-
   # get clicked tags
   $('h1, h2, h3, p, a').click (e) -> 
 
     # get clicked element
     x = $(this)
 
+    # remove background and class from previously clicked elements 
+    $('.clicked').css('background', 'none')
+    $('.clicked').removeClass('clicked')  
+
+    # set background and class to highlight the clicked element
+    x.addClass('clicked')
+    x.css('background', 'rgb(255, 251, 204)')
+
     chrome.extension.sendMessage {
       # send information to background page
-      "element": $(this).prop("tagName").toLowerCase()
-      "fontSize": $(this).css("font-size")
+      "tagName": x.prop("tagName").toLowerCase()
+      "fontSize": x.css("font-size")
     }
-    x = $(this)

@@ -40,11 +40,14 @@
     return $('h1, h2, h3, p, a').click(function(e) {
       var x;
       x = $(this);
-      chrome.extension.sendMessage({
-        "element": $(this).prop("tagName").toLowerCase(),
-        "fontSize": $(this).css("font-size")
+      $('.clicked').css('background', 'none');
+      $('.clicked').removeClass('clicked');
+      x.addClass('clicked');
+      x.css('background', 'rgb(255, 251, 204)');
+      return chrome.extension.sendMessage({
+        "tagName": x.prop("tagName").toLowerCase(),
+        "fontSize": x.css("font-size")
       });
-      return x = $(this);
     });
   });
 

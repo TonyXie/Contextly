@@ -8,6 +8,10 @@ body {
   min-height: 300px;
 }
 
+#clicked{
+  background:rgb(255, 251, 204);
+}
+
 #fontColor {
   margin-bottom: 5px;
 }

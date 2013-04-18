@@ -12,8 +12,8 @@ $(document).ready ->
   # see if the user has clicked an element on the page
   $('#getPageElement').click (e) -> 
     popupVars = bkg.getpopupVars()
-    if popupVars.element?
-      $("#elementSelectedText").val(popupVars.element)
+    if popupVars.tagName?
+      $("#elementSelectedText").val(popupVars.tagName)
       $("#changeFontSize").val(popupVars.fontSize)
     else 
       $("#elementSelectedText").val("h1")

@@ -6,7 +6,8 @@
 
   chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     popupVars.element = request.element;
-    return popupVars.fontSize = request.fontSize;
+    popupVars.fontSize = request.fontSize;
+    return popupVars.tagName = request.tagName;
   });
 
   this.loadBootstrap = function() {

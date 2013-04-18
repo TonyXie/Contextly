@@ -4,6 +4,7 @@ popupVars = new Object()
 chrome.extension.onMessage.addListener (request, sender, sendResponse) -> 
   popupVars.element = request.element
   popupVars.fontSize = request.fontSize
+  popupVars.tagName = request.tagName
 
 # interesting coffeescript idiom -- in order to get 
 # function xyz instead of var xyz = function, you have to 

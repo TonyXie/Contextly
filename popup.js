@@ -11,8 +11,8 @@
     $('#getPageElement').click(function(e) {
       var popupVars;
       popupVars = bkg.getpopupVars();
-      if (popupVars.element != null) {
-        $("#elementSelectedText").val(popupVars.element);
+      if (popupVars.tagName != null) {
+        $("#elementSelectedText").val(popupVars.tagName);
         return $("#changeFontSize").val(popupVars.fontSize);
       } else {
         $("#elementSelectedText").val("h1");
