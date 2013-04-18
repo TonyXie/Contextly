@@ -5,7 +5,8 @@
   popupVars = new Object();
 
   chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-    return popupVars.element = request.element;
+    popupVars.element = request.element;
+    return popupVars.fontSize = request.fontSize;
   });
 
   this.loadBootstrap = function() {
@@ -16,12 +17,13 @@
     });
   };
 
-  this.changeFont = function(element, font) {
+  this.changeFont = function(element, font, fontSize) {
     return chrome.tabs.getSelected(null, function(tab) {
       return chrome.tabs.sendMessage(tab.id, {
         action: "changeFont",
         element: element,
-        font: font
+        font: font,
+        fontSize: fontSize
       });
     });
   };

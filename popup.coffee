@@ -14,8 +14,10 @@ $(document).ready ->
     popupVars = bkg.getpopupVars()
     if popupVars.element?
       $("#elementSelectedText").val(popupVars.element)
+      $("#changeFontSize").val(popupVars.fontSize)
     else 
       $("#elementSelectedText").val("h1")
+      $("#changeFontSize").val("15px")
 
   # append class to selected element
   $('#changeElement').click (e) -> 
@@ -29,4 +31,5 @@ $(document).ready ->
     e.preventDefault()
     font = $('#font-list').val()
     element = $("#elementSelectedText").val()
-    bkg.changeFont(element, font) 
+    fontSize = $("#changeFontSize").val()
+    bkg.changeFont(element, font, fontSize) 

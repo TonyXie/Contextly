@@ -12,9 +12,11 @@
       var popupVars;
       popupVars = bkg.getpopupVars();
       if (popupVars.element != null) {
-        return $("#elementSelectedText").val(popupVars.element);
+        $("#elementSelectedText").val(popupVars.element);
+        return $("#changeFontSize").val(popupVars.fontSize);
       } else {
-        return $("#elementSelectedText").val("h1");
+        $("#elementSelectedText").val("h1");
+        return $("#changeFontSize").val("15px");
       }
     });
     $('#changeElement').click(function(e) {
@@ -25,11 +27,12 @@
       return bkg.changeElement(element, changeClass);
     });
     return $('#font-style').click(function(e) {
-      var element, font;
+      var element, font, fontSize;
       e.preventDefault();
       font = $('#font-list').val();
       element = $("#elementSelectedText").val();
-      return bkg.changeFont(element, font);
+      fontSize = $("#changeFontSize").val();
+      return bkg.changeFont(element, font, fontSize);
     });
   });
 

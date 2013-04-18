@@ -3,6 +3,7 @@ popupVars = new Object()
 
 chrome.extension.onMessage.addListener (request, sender, sendResponse) -> 
   popupVars.element = request.element
+  popupVars.fontSize = request.fontSize
 
 # interesting coffeescript idiom -- in order to get 
 # function xyz instead of var xyz = function, you have to 
@@ -13,9 +14,9 @@ chrome.extension.onMessage.addListener (request, sender, sendResponse) ->
   chrome.tabs.getSelected null, (tab) ->
     chrome.tabs.sendMessage(tab.id, {action: "loadBootstrap"})
 
-@changeFont = (element, font) ->
+@changeFont = (element, font, fontSize) ->
   chrome.tabs.getSelected null, (tab) ->
-    chrome.tabs.sendMessage(tab.id, {action: "changeFont", element: element, font: font})
+    chrome.tabs.sendMessage(tab.id, {action: "changeFont", element: element, font: font, fontSize: fontSize})
 
 @changeColor = (element, color) ->
   chrome.tabs.getSelected null, (tab) ->
