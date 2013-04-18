@@ -3,7 +3,7 @@
 
   $(document).ready(function() {
     chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-      var changeClass, element, font, fontSize, text;
+      var changeClass, color, element, font, fontSize, text;
       if (request.action === "loadBootstrap") {
         $("head").append("          <link href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css' rel='stylesheet'>        ");
         $('body').wrap('<div class="container" />');
@@ -28,18 +28,23 @@
         font = request.font;
         element = request.element;
         fontSize = request.fontSize;
+        color = "#" + request.color;
         $("head").append("        <link href='http://fonts.googleapis.com/css?family=" + font + "' rel='stylesheet' type='text/css'>        ");
         font = font.split("+").join(" ");
         $(element).css;
         $(element).css('font-family', font);
-        return $(element).css('font-size', fontSize);
+        $(element).css('font-size', fontSize);
+        return $(element).css('color', color);
       }
     });
     return $('h1, h2, h3, p, a').click(function(e) {
-      return chrome.extension.sendMessage({
+      var x;
+      x = $(this);
+      chrome.extension.sendMessage({
         "element": $(this).prop("tagName").toLowerCase(),
         "fontSize": $(this).css("font-size")
       });
+      return x = $(this);
     });
   });
 

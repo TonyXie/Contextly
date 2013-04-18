@@ -47,9 +47,11 @@ $(document).ready ->
 
     # method for changing the font 
     if request.action is "changeFont"
+      # set local variables
       font = request.font 
       element = request.element
       fontSize= request.fontSize
+      color = "#" + request.color
 
       # get css stylesheet from googlefonts
       $("head").append("
@@ -66,11 +68,19 @@ $(document).ready ->
       # change font-size
       $(element).css('font-size', fontSize)
 
+      # change color
+      $(element).css('color', color)
+
 
   # get clicked tags
   $('h1, h2, h3, p, a').click (e) -> 
+
+    # get clicked element
+    x = $(this)
+
     chrome.extension.sendMessage {
-      # get tag name
+      # send information to background page
       "element": $(this).prop("tagName").toLowerCase()
       "fontSize": $(this).css("font-size")
     }
+    x = $(this)

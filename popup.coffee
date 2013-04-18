@@ -29,7 +29,17 @@ $(document).ready ->
   # change the font
   $('#font-style').click (e) -> 
     e.preventDefault()
+
+    # get font type
     font = $('#font-list').val()
+
+    # get element
     element = $("#elementSelectedText").val()
+
+    # get font size
     fontSize = $("#changeFontSize").val()
-    bkg.changeFont(element, font, fontSize) 
+
+    # get color 
+    color = $("#fontColor").val()
+
+    bkg.changeFont(element, font, fontSize, color) 

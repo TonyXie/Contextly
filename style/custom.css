@@ -5,6 +5,15 @@ h1 {
 body {
   min-width: 600px;
   overflow-x: hidden;
+  min-height: 300px;
+}
+
+#fontColor {
+  margin-bottom: 5px;
+}
+
+.container{
+  margin-top: 10px;
 }
 
 a {

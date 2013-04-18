@@ -27,12 +27,13 @@
       return bkg.changeElement(element, changeClass);
     });
     return $('#font-style').click(function(e) {
-      var element, font, fontSize;
+      var color, element, font, fontSize;
       e.preventDefault();
       font = $('#font-list').val();
       element = $("#elementSelectedText").val();
       fontSize = $("#changeFontSize").val();
-      return bkg.changeFont(element, font, fontSize);
+      color = $("#fontColor").val();
+      return bkg.changeFont(element, font, fontSize, color);
     });
   });
 

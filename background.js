@@ -17,22 +17,13 @@
     });
   };
 
-  this.changeFont = function(element, font, fontSize) {
+  this.changeFont = function(element, font, fontSize, color) {
     return chrome.tabs.getSelected(null, function(tab) {
       return chrome.tabs.sendMessage(tab.id, {
         action: "changeFont",
         element: element,
         font: font,
-        fontSize: fontSize
-      });
-    });
-  };
-
-  this.changeColor = function(element, color) {
-    return chrome.tabs.getSelected(null, function(tab) {
-      return chrome.tabs.sendMessage(tab.id, {
-        action: "changeColor",
-        element: element,
+        fontSize: fontSize,
         color: color
       });
     });
