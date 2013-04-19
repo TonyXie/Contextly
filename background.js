@@ -30,6 +30,15 @@
     });
   };
 
+  this.changeTagName = function(changeTag) {
+    return chrome.tabs.getSelected(null, function(tab) {
+      return chrome.tabs.sendMessage(tab.id, {
+        action: "changeTagName",
+        changeTag: changeTag
+      });
+    });
+  };
+
   this.changeElement = function(element, changeClass) {
     return chrome.tabs.getSelected(null, function(tab) {
       return chrome.tabs.sendMessage(tab.id, {

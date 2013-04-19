@@ -50,6 +50,15 @@ $(document).ready ->
         # add wrapping div to selected element
         element.wrap('<div class=' + '"' + changeClass + '"' + ' />')
 
+    # method for changing the tagName 
+    if request.action is "changeTagName"
+      changeTag = request.changeTag
+      element = $('.clicked')
+
+      # replace old tag with new tag while keeping the content 
+      element.replaceWith -> 
+        $("<h2 />").append element.contents()
+  
     # method for changing the font 
     if request.action is "changeFont"
       # set local variables
@@ -77,7 +86,10 @@ $(document).ready ->
       element.css('color', color)
 
   # get clicked tags
-  $('h1, h2, h3, p, a').click (e) -> 
+  $('h1, h2, h3, p, a, li').click (e) -> 
+
+    # prevent default
+    e.preventDefault()
 
     # get clicked element
     x = $(this)

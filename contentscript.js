@@ -3,7 +3,7 @@
 
   $(document).ready(function() {
     chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-      var changeClass, color, element, font, fontSize, text;
+      var changeClass, changeTag, color, element, font, fontSize, text;
       if (request.action === "loadBootstrap") {
         $("head").append("          <link href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css' rel='stylesheet'>        ");
         $('body').wrap('<div class="container" />');
@@ -26,6 +26,13 @@
           element.wrap('<div class=' + '"' + changeClass + '"' + ' />');
         }
       }
+      if (request.action === "changeTagName") {
+        changeTag = request.changeTag;
+        element = $('.clicked');
+        element.replaceWith(function() {
+          return $("<h2 />").append(element.contents());
+        });
+      }
       if (request.action === "changeFont") {
         font = request.font;
         element = $('.clicked');
@@ -39,8 +46,9 @@
         return element.css('color', color);
       }
     });
-    return $('h1, h2, h3, p, a').click(function(e) {
+    return $('h1, h2, h3, p, a, li').click(function(e) {
       var x;
+      e.preventDefault();
       x = $(this);
       $('.clicked').css('background', 'none');
       $('.clicked').removeClass('clicked');

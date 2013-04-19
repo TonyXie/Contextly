@@ -8,6 +8,10 @@ body {
   min-height: 300px;
 }
 
+.btn {
+  margin-top: 5px;
+}
+
 #clicked{
   background:rgb(255, 251, 204);
 }

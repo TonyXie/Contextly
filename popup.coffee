@@ -26,6 +26,12 @@ $(document).ready ->
     changeClass = $("#class-list").val()
     bkg.changeElement(element, changeClass)
 
+  # change the selected tagName
+  $('#changeTagName').click (e) -> 
+    e.preventDefault()
+    changeTag = $('#changeTagNameText').val
+    bkg.changeTagName(changeTag)
+
   # change the font
   $('#font-style').click (e) -> 
     e.preventDefault()

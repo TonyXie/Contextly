@@ -27,6 +27,14 @@ chrome.extension.onMessage.addListener (request, sender, sendResponse) ->
       color: color
     })
 
+# method for changing the tagName
+@changeTagName = (changeTag) -> 
+  chrome.tabs.getSelected null, (tab) ->
+    chrome.tabs.sendMessage(tab.id, {
+      action: "changeTagName"
+      changeTag: changeTag
+    })
+
 # method for add classes to element 
 @changeElement = (element, changeClass)  -> 
   chrome.tabs.getSelected null, (tab) -> 

@@ -26,6 +26,12 @@
       changeClass = $("#class-list").val();
       return bkg.changeElement(element, changeClass);
     });
+    $('#changeTagName').click(function(e) {
+      var changeTag;
+      e.preventDefault();
+      changeTag = $('#changeTagNameText').val;
+      return bkg.changeTagName(changeTag);
+    });
     return $('#font-style').click(function(e) {
       var color, element, font, fontSize;
       e.preventDefault();

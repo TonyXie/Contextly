@@ -11,14 +11,14 @@
   <body>
   <div class="container">
 
-  <div class="span3">
-    <a href="#" id="loadBootstrap">Load bootstrap</a> 
-    <a href="#" id="getPageElement">Get Page Element</a>
+  <div class="span2">
+    <button class="btn btn-small btn-primary" id="loadBootstrap">Load bootstrap</button>
+    <button class="btn btn-small btn-primary" id="getPageElement">Get selected Element</button>
   </div>
 
 
   <div class="span3">
-    <textarea name="Tony" id="elementSelectedText" cols="1" rows="1">Current selected element:</textarea>
+    <textarea name="Tony" id="elementSelectedText" cols="1" rows="1">Current selected tagName:</textarea>
     <select name="class-list" id="class-list">
       <option value="hero-unit">hero-unit</option>
       <option value="navbar">instantiate navbar</option>
@@ -28,7 +28,9 @@
       <option value="span6">span6</option>
       <option value="span3">span3</option>
     </select>
-    <a href="#" id="changeElement">change element</a>
+     <button class="btn btn-small btn-primary" id="changeElement">change element</button>
+    <textarea name="Tony" id="changeTagNameText" cols="1" rows="1">Change tagName:</textarea>
+    <button class="btn btn-small btn-primary" id="changeTagName">change tagName</button>
   </div>
 
   <div class="span3">
@@ -50,7 +52,7 @@
     </select>
     <textarea name="Tony" id="changeFontSize" cols="1" rows="1">Current font size:</textarea>
     <input id="fontColor" class="color" value="000000" >
-    <a href="#" id="font-style">change the font</a>
+     <button class="btn btn-small btn-primary" id="font-style">change the font</button>
   </div>
 
 
