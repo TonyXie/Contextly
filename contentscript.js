@@ -9,32 +9,34 @@
         $('body').wrap('<div class="container" />');
       }
       if (request.action === "changeElement") {
-        element = request.element;
+        element = $('.clicked');
         changeClass = request.changeClass;
         if (changeClass === "navbar") {
-          $(element).wrap('<div class="navbar" />');
-          $(element).addClass('brand');
-          $(element).wrap('<div class="navbar-inner" />');
+          element.wrap('<div class="navbar" />');
+          element.addClass('brand');
+          element.wrap('<div class="navbar-inner" />');
           $(".navbar-inner").append('<ul class="nav"></ul>');
         } else if (changeClass === "nav") {
-          text = $(element).text();
-          $(element).remove();
+          text = element.text();
+          element.remove();
           $('ul.nav').append("<li><a href='#'>" + text + "</a></li>");
+        } else if (changeClass === "addToHero") {
+          $(".hero-unit").append(element);
         } else {
-          $(element).wrap('<div class=' + '"' + changeClass + '"' + ' />');
+          element.wrap('<div class=' + '"' + changeClass + '"' + ' />');
         }
       }
       if (request.action === "changeFont") {
         font = request.font;
-        element = request.element;
+        element = $('.clicked');
         fontSize = request.fontSize;
         color = "#" + request.color;
         $("head").append("        <link href='http://fonts.googleapis.com/css?family=" + font + "' rel='stylesheet' type='text/css'>        ");
         font = font.split("+").join(" ");
-        $(element).css;
-        $(element).css('font-family', font);
-        $(element).css('font-size', fontSize);
-        return $(element).css('color', color);
+        element.css;
+        element.css('font-family', font);
+        element.css('font-size', fontSize);
+        return element.css('color', color);
       }
     });
     return $('h1, h2, h3, p, a').click(function(e) {

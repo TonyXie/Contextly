@@ -16,16 +16,17 @@ $(document).ready ->
 
     # method for adding wrapping parent nodes with specific classes
     if request.action is "changeElement"
-      element = request.element
+      # get the clicked element
+      element = $('.clicked')
       changeClass = request.changeClass
 
       # special case for navbar: have to add outer navbar then navbar-inner
       if changeClass is "navbar"
 
         # make the navbar
-        $(element).wrap('<div class="navbar" />')
-        $(element).addClass('brand')
-        $(element).wrap('<div class="navbar-inner" />')
+        element.wrap('<div class="navbar" />')
+        element.addClass('brand')
+        element.wrap('<div class="navbar-inner" />')
 
         # make the nav-items 
         $(".navbar-inner").append('<ul class="nav"></ul>')
@@ -33,23 +34,27 @@ $(document).ready ->
       else if changeClass is "nav"
 
         # get previous content of the element
-        text = $(element).text()
+        text = element.text()
 
         # remove the element 
-        $(element).remove()
+        element.remove()
 
         # add item to pre-existing ul.nav
         $('ul.nav').append("<li><a href='#'>#{text}</a></li>")
 
+      else if changeClass is "addToHero"
+        # add element to hero-unit already existing 
+        $(".hero-unit").append( element )
+
       else 
         # add wrapping div to selected element
-        $(element).wrap('<div class=' + '"' + changeClass + '"' + ' />')
+        element.wrap('<div class=' + '"' + changeClass + '"' + ' />')
 
     # method for changing the font 
     if request.action is "changeFont"
       # set local variables
       font = request.font 
-      element = request.element
+      element = $('.clicked')
       fontSize= request.fontSize
       color = "#" + request.color
 
@@ -60,16 +65,16 @@ $(document).ready ->
 
       # some magicking to get right font-name 
       font = font.split("+").join(" ")
-      $(element).css
+      element.css
 
       # change css of element
-      $(element).css('font-family', font)
+      element.css('font-family', font)
 
       # change font-size
-      $(element).css('font-size', fontSize)
+      element.css('font-size', fontSize)
 
       # change color
-      $(element).css('color', color)
+      element.css('color', color)
 
   # get clicked tags
   $('h1, h2, h3, p, a').click (e) -> 
