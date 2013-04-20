@@ -1,8 +1,16 @@
 $(document).ready ->
 
+  $(document).bind 'keypress', (e) -> 
+    if event.which is 74 and event.shiftKey
+      alert "you pressed Shift + J"
+      element = window.prompt "Choose class to add", "e.g. hero-unit"
+      $('.clicked').wrap('<div class="hero-unit" />')
+
+
+
    # message listener 
   chrome.extension.onMessage.addListener (request, sender, sendResponse) -> 
-
+  
     # method for loading bootstrap into current page
     if request.action is "loadBootstrap"
 
@@ -29,7 +37,7 @@ $(document).ready ->
         element.wrap('<div class="navbar-inner" />')
 
         # make the nav-items 
-        $(".navbar-inner").append('<ul class="nav"></ul>')
+        $(".navbar-inner").append('<ul class="nav pull-right sortable"></ul>')
 
       else if changeClass is "nav"
 
@@ -84,6 +92,7 @@ $(document).ready ->
 
       # change color
       element.css('color', color)
+
 
   # get clicked tags
   $('h1, h2, h3, p, a, li').click (e) -> 

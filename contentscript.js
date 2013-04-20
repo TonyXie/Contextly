@@ -2,6 +2,14 @@
 (function() {
 
   $(document).ready(function() {
+    $(document).bind('keypress', function(e) {
+      var element;
+      if (event.which === 74 && event.shiftKey) {
+        alert("you pressed Shift + J");
+        element = window.prompt("Choose class to add", "e.g. hero-unit");
+        return $('.clicked').wrap('<div class="hero-unit" />');
+      }
+    });
     chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
       var changeClass, changeTag, color, element, font, fontSize, text;
       if (request.action === "loadBootstrap") {
@@ -15,7 +23,7 @@
           element.wrap('<div class="navbar" />');
           element.addClass('brand');
           element.wrap('<div class="navbar-inner" />');
-          $(".navbar-inner").append('<ul class="nav"></ul>');
+          $(".navbar-inner").append('<ul class="nav pull-right sortable"></ul>');
         } else if (changeClass === "nav") {
           text = element.text();
           element.remove();
