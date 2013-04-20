@@ -3,11 +3,34 @@
 
   $(document).ready(function() {
     $(document).bind('keypress', function(e) {
-      var element;
-      if (event.which === 74 && event.shiftKey) {
-        alert("you pressed Shift + J");
-        element = window.prompt("Choose class to add", "e.g. hero-unit");
-        return $('.clicked').wrap('<div class="hero-unit" />');
+      var changeClass, fontsize, tagName;
+      if (event.shiftKey && event.which === 74) {
+        fontsize = window.prompt("font-size?", "" + ($('.clicked').css('font-size')));
+        if (fontsize != null) {
+          $('.clicked').css('font-size', fontsize);
+        }
+      }
+      if (event.shiftKey && event.which === 87) {
+        changeClass = window.prompt("What class to wrap with");
+        if (changeClass != null) {
+          $('.clicked').wrap('<div class=' + "'" + changeClass + "'" + '/>');
+        }
+      }
+      if (event.shiftKey && event.which === 84) {
+        tagName = window.prompt("tagName?", "" + ($('.clicked').prop('tagName').toLowerCase()));
+        if (tagName != null) {
+          $('.clicked').replaceWith(function() {
+            return $("<" + tagName + " />").append($('.clicked').contents());
+          });
+        }
+      }
+      if (event.shiftKey && event.which === 68) {
+        return $('.clicked').draggable({
+          grid: [50, 50],
+          stop: function() {
+            return $(this).draggable('disable');
+          }
+        });
       }
     });
     chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
@@ -54,7 +77,7 @@
         return element.css('color', color);
       }
     });
-    return $('h1, h2, h3, p, a, li').click(function(e) {
+    return $('body').on("click", "h1, h2, h3, p, a, li", function(e) {
       var x;
       e.preventDefault();
       x = $(this);

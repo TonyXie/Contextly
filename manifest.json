@@ -12,8 +12,8 @@
 
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["jquery-1.9.1.min.js", "contentscript.js"]
+      "matches": ["http://localhost:5000/*"],
+      "js": ["jquery-1.9.1.min.js", "jquery-ui-1.10.2.custom.min.js", "contentscript.js"]
     }
   ],
 

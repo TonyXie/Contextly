@@ -1,11 +1,37 @@
 $(document).ready ->
 
-  $(document).bind 'keypress', (e) -> 
-    if event.which is 74 and event.shiftKey
-      alert "you pressed Shift + J"
-      element = window.prompt "Choose class to add", "e.g. hero-unit"
-      $('.clicked').wrap('<div class="hero-unit" />')
+  $(document).bind 'keypress', (e) ->
 
+     # change font-size ( shift + J )
+    if event.shiftKey and event.which is 74 
+      fontsize = window.prompt("font-size?", "#{$('.clicked').css('font-size')}")
+
+      # account for null 
+      if fontsize? 
+        $('.clicked').css('font-size', fontsize)
+
+    # Wrap with class ( shift + W )
+    if event.shiftKey and event.which is 87
+      changeClass = window.prompt("What class to wrap with")
+
+      if changeClass?
+        $('.clicked').wrap('<div class=' + "'" + changeClass + "'" + '/>')
+
+    # change tagName ( shift + T )
+    if event.shiftKey and event.which is 84
+      tagName = window.prompt("tagName?", "#{$('.clicked').prop('tagName').toLowerCase()}")
+
+      if tagName?
+        $('.clicked').replaceWith -> 
+          $("<#{tagName} />").append $('.clicked').contents()
+
+    # make something draggable to a 50 x 50 grid ( shift + D)
+    if event.shiftKey and event.which is 68
+      $('.clicked').draggable({
+        grid: [50,50], 
+        stop: -> 
+          $(this).draggable('disable')
+        })
 
 
    # message listener 
@@ -95,7 +121,7 @@ $(document).ready ->
 
 
   # get clicked tags
-  $('h1, h2, h3, p, a, li').click (e) -> 
+  $('body').on "click", "h1, h2, h3, p, a, li", (e) -> 
 
     # prevent default
     e.preventDefault()
