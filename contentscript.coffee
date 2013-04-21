@@ -1,11 +1,24 @@
 $(document).ready ->
 
+  # info flash messages 
+  $('body').prepend('
+     <div id="draggableFlash" class="hide alert alert-success" style="
+    z-index: 1000;
+    position: absolute;
+    left: 41%;
+    top: 2%;
+    width: 200px;
+">
+      <a class="close" id= "closeMyFlash" href="#">×</a>
+      <p>Element made draggable!</p>
+    </div>
+    ')
+
   # modal for changing font 
   $('body').append('
       <!-- Modal -->
       <div id="fontModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           <h3 id="myModalLabel">Change font</h3>
         </div>
         <div class="modal-body">
@@ -30,15 +43,74 @@ $(document).ready ->
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-          <button id="fontChange" class="btn btn-primary">Save changes</button>
+          <button id="fontChange" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+        </div>
+      </div>  
+    ')
+  
+  # Keyboard shortcuts modal
+  $('body').append('
+      <!-- Modal -->
+      <div id="helpModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+          <h3 id="myModalLabel">Help Menu</h3>
+        </div>
+        <div class="modal-body">
+          <h3>Help menu: Shift + H</h3>
+          <h3>Change font-styles: Shift + F</h3>
+          <h3>Wrap element with class: Shift + W</h3>
+          <h3>Change tagName: Shift + T</h3>
+          <h3>Make element draggable: Shift + D</h3>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
         </div>
       </div>  
     ')
 
+  # wrap element in specified class modal
+  $('body').append('
+      <!-- Modal -->
+      <div id="wrapElementModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+          <h3 id="myModalLabel">Wrap Element Menu</h3>
+        </div>
+        <div class="modal-body">
+          <textarea name="Tony" id="wrapElememtArea" cols="1" rows="1">Wrap element class:</textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          <button id="wrapElement" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
+        </div>
+      </div>  
+    ')
+
+  # change tagName modal
+  $('body').append('
+      <!-- Modal -->
+      <div id="changeTagNameModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+          <h3 id="myModalLabel">Change tagName</h3>
+        </div>
+        <div class="modal-body">
+          <textarea name="Tony" id="changeTagNameArea" cols="1" rows="1">change tagName to:</textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          <button id="changeTagName" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
+        </div>
+      </div>  
+    ')
+
+
   $(document).bind 'keypress', (e) ->
 
-     # change font-size ( shift + J )
-    if event.shiftKey and event.which is 74 
+    # Display help menu
+    if event.shiftKey and event.which is 72
+      $("#helpModal").modal()
+
+     # change font-size ( shift + F )
+    if event.shiftKey and event.which is 70 
       # get current font-size 
       currFontSize = $('.clicked').css('font-size')
       $("#changeFontSize").val(currFontSize)
@@ -46,21 +118,19 @@ $(document).ready ->
 
     # Wrap with class ( shift + W )
     if event.shiftKey and event.which is 87
-      changeClass = window.prompt("What class to wrap with")
-
-      if changeClass?
-        $('.clicked').wrap('<div class=' + "'" + changeClass + "'" + '/>')
+      $('#wrapElementModal').modal()
 
     # change tagName ( shift + T )
     if event.shiftKey and event.which is 84
-      tagName = window.prompt("tagName?", "#{$('.clicked').prop('tagName').toLowerCase()}")
-
-      if tagName?
-        $('.clicked').replaceWith -> 
-          $("<#{tagName} />").append $('.clicked').contents()
+      # fill in the modal with tagName of currently selected element
+      currTagName = $('.clicked').prop('tagName').toLowerCase()
+      $('#changeTagNameArea').val(currTagName)
+      $("#changeTagNameModal").modal()
 
     # make something draggable to a 50 x 50 grid ( shift + D)
     if event.shiftKey and event.which is 68
+      $('#draggableFlash').fadeIn 1500, -> 
+        $('#draggableFlash').fadeOut()
       $('.clicked').draggable({
         grid: [50,50], 
         disabled: false,
@@ -132,7 +202,7 @@ $(document).ready ->
     if request.action is "changeFont"
       changeFont(request.font, request.fontSize, request.color)
 
-  # change font
+  # change font in modal
   $('body').on 'click', "#fontChange", (e) -> 
      # get font type
     font = $('#font-list').val()
@@ -145,6 +215,22 @@ $(document).ready ->
 
     # call changeFont
     changeFont(font, fontSize, color)
+
+  # wrap element in modal 
+  $('body').on 'click', "#wrapElement", (e) -> 
+    # get element
+    classToWrap = $('#wrapElememtArea').val()
+    wrapElement classToWrap
+
+  # change tagName in modal 
+  $('body').on 'click', "#changeTagNameModal", (e) -> 
+    # get tagName 
+    tagName = $('#changeTagNameArea').val()
+    changeTagName tagName
+
+  # close flash
+  $('body').on 'click', '#closeMyFlash', (e) -> 
+    $('#draggableFlash').fadeOut()
 
   # get clicked tags
   $('body').on "click", "h1, h2, h3, p, a, li", (e) -> 
@@ -193,3 +279,14 @@ changeFont = (font, fontSize, color) ->
 
   # change color
   element.css('color', color)
+
+# method for wrapping elements in classes 
+wrapElement = (wrapElement) -> 
+  $('.clicked').wrap('<div class=' + '"' + wrapElement + '"' + ' />')
+
+# method for changing the tagName of an element 
+changeTagName = (tagName) -> 
+
+  if tagName?
+    $('.clicked').replaceWith -> 
+      $("<#{tagName} />").append $('.clicked').contents()
