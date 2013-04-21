@@ -1,14 +1,48 @@
 $(document).ready ->
 
+  # modal for changing font 
+  $('body').append('
+      <!-- Modal -->
+      <div id="fontModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3 id="myModalLabel">Change font</h3>
+        </div>
+        <div class="modal-body">
+          <select name="font-list" id="font-list">
+            <option value="Raleway">Raleway</option>
+            <option value="Gabriela"> Gabriela </option>
+            <option value="Abril+Fatface">Abril Fatface</option>
+            <option value="Gentium+Book+Basic">Gentium Book Basic</option>
+            <option value="Gravitas+One">Gravitas One</option>
+            <option value="Lato">Lato</option>
+            <option value="Merriweather">Merriweather</option>
+            <option value="Old+Standard+TT">Old Standard TT</option>
+            <option value="Open+Sans">Open Sans</option>
+            <option value="Playfair+Display">Playfair Display</option>
+            <option value="PT+Sans">PT Sans</option>
+            <option value="PT+Sans+Narrow">PT Sans Narrow</option>
+            <option value="PT+Serif">PT Serif</option>
+            <option value="Vollkorn">Vollkorn</option>
+          </select>
+        <textarea name="Tony" id="changeFontSize" cols="1" rows="1">Current font size:</textarea>
+        <input id="fontColor" class="color" value="000000" >
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          <button id="fontChange" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>  
+    ')
+
   $(document).bind 'keypress', (e) ->
 
      # change font-size ( shift + J )
     if event.shiftKey and event.which is 74 
-      fontsize = window.prompt("font-size?", "#{$('.clicked').css('font-size')}")
-
-      # account for null 
-      if fontsize? 
-        $('.clicked').css('font-size', fontsize)
+      # get current font-size 
+      currFontSize = $('.clicked').css('font-size')
+      $("#changeFontSize").val(currFontSize)
+      $("#fontModal").modal()
 
     # Wrap with class ( shift + W )
     if event.shiftKey and event.which is 87
@@ -29,6 +63,7 @@ $(document).ready ->
     if event.shiftKey and event.which is 68
       $('.clicked').draggable({
         grid: [50,50], 
+        disabled: false,
         stop: -> 
           $(this).draggable('disable')
         })
@@ -95,30 +130,21 @@ $(document).ready ->
   
     # method for changing the font 
     if request.action is "changeFont"
-      # set local variables
-      font = request.font 
-      element = $('.clicked')
-      fontSize= request.fontSize
-      color = "#" + request.color
+      changeFont(request.font, request.fontSize, request.color)
 
-      # get css stylesheet from googlefonts
-      $("head").append("
-        <link href='http://fonts.googleapis.com/css?family=" + font + "' rel='stylesheet' type='text/css'>
-        ");
+  # change font
+  $('body').on 'click', "#fontChange", (e) -> 
+     # get font type
+    font = $('#font-list').val()
 
-      # some magicking to get right font-name 
-      font = font.split("+").join(" ")
-      element.css
+    # get font size
+    fontSize = $("#changeFontSize").val()
 
-      # change css of element
-      element.css('font-family', font)
+    # get color 
+    color = $("#fontColor").val()
 
-      # change font-size
-      element.css('font-size', fontSize)
-
-      # change color
-      element.css('color', color)
-
+    # call changeFont
+    changeFont(font, fontSize, color)
 
   # get clicked tags
   $('body').on "click", "h1, h2, h3, p, a, li", (e) -> 
@@ -142,3 +168,28 @@ $(document).ready ->
       "tagName": x.prop("tagName").toLowerCase()
       "fontSize": x.css("font-size")
     }
+
+# method for changing the font 
+changeFont = (font, fontSize, color) -> 
+  # set local variables
+  font = font 
+  element = $('.clicked')
+  fontSize= fontSize
+  color = "#" + color
+
+  # get css stylesheet from googlefonts
+  $("head").append("
+    <link href='http://fonts.googleapis.com/css?family=" + font + "' rel='stylesheet' type='text/css'>
+    ");
+
+  # some magicking to get right font-name 
+  font = font.split("+").join(" ")
+
+  # change css of element
+  element.css('font-family', font)
+
+  # change font-size
+  element.css('font-size', fontSize)
+
+  # change color
+  element.css('color', color)
