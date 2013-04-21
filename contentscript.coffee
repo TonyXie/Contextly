@@ -61,6 +61,7 @@ $(document).ready ->
           <h3>Wrap element with class: Shift + W</h3>
           <h3>Change tagName: Shift + T</h3>
           <h3>Make element draggable: Shift + D</h3>
+          <h3>Add element to existing div: Shift + A</h3>
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -76,7 +77,7 @@ $(document).ready ->
           <h3 id="myModalLabel">Wrap Element Menu</h3>
         </div>
         <div class="modal-body">
-          <textarea name="Tony" id="wrapElememtArea" cols="1" rows="1">Wrap element class:</textarea>
+          <b style="font-size: 50px">.</b><textarea name="Tony" id="wrapElememtArea" cols="1" rows="1">Wrap element class:</textarea>
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -98,6 +99,40 @@ $(document).ready ->
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
           <button id="changeTagName" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
+        </div>
+      </div>  
+    ')
+
+  # add element to existing div modal
+  $('body').append('
+      <!-- Modal -->
+      <div id="addElementToDivModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+          <h3 id="myModalLabel">Add Element to Existing Class</h3>
+        </div>
+        <div class="modal-body">
+          <b style="font-size: 50px">.</b><textarea name="Tony" id="addElementToDivArea" cols="1" rows="1">Choose div to add element to:</textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          <button id="addElementToDiv" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
+        </div>
+      </div>  
+    ')
+
+  # make class resizable modal
+  $('body').append('
+      <!-- Modal -->
+      <div id="resizableModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+          <h3 id="myModalLabel">Make Class resizable</h3>
+        </div>
+        <div class="modal-body">
+          <b style="font-size: 50px">.</b><textarea name="Tony" id="resizableClassArea" cols="1" rows="1">Choose class to make resizable:</textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          <button id="makeResizable" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
         </div>
       </div>  
     ')
@@ -132,11 +167,29 @@ $(document).ready ->
       $('#draggableFlash').fadeIn 1500, -> 
         $('#draggableFlash').fadeOut()
       $('.clicked').draggable({
+
+        # constrain dragged element to 50 x 50 grid
         grid: [50,50], 
+
+        # fix for not being able to reintialize draggable upon release
         disabled: false,
+
+        # make element not draggable upon release
         stop: -> 
           $(this).draggable('disable')
+
+        # don't change opacity while dragging
+        opacity: 1
         })
+
+    # method for adding element to a class ( shift + A )
+    if event.shiftKey and event.which is 65
+      $('#addElementToDivModal').modal()
+
+    # method for making element resizable ( shift + R )
+    if event.shiftKey and event.which is 82 
+      $('#resizableModal').modal()
+
 
 
    # message listener 
@@ -202,7 +255,7 @@ $(document).ready ->
     if request.action is "changeFont"
       changeFont(request.font, request.fontSize, request.color)
 
-  # change font in modal
+  # click listener for change font in modal
   $('body').on 'click', "#fontChange", (e) -> 
      # get font type
     font = $('#font-list').val()
@@ -216,21 +269,32 @@ $(document).ready ->
     # call changeFont
     changeFont(font, fontSize, color)
 
-  # wrap element in modal 
+  # click listener for wrap element in modal 
   $('body').on 'click', "#wrapElement", (e) -> 
     # get element
     classToWrap = $('#wrapElememtArea').val()
     wrapElement classToWrap
 
-  # change tagName in modal 
+  # click listener for change tagName in modal 
   $('body').on 'click', "#changeTagNameModal", (e) -> 
     # get tagName 
     tagName = $('#changeTagNameArea').val()
     changeTagName tagName
 
-  # close flash
+  # click listener for close flash
   $('body').on 'click', '#closeMyFlash', (e) -> 
     $('#draggableFlash').fadeOut()
+
+  # click listener to add element to an existing div
+  $('body').on 'click', '#addElementToDiv', (e) -> 
+    # get class val 
+    classToAdd = $('#addElementToDivArea').val()
+    addElementToDiv classToAdd
+
+  $('body').on 'click', '#makeResizable', (e) -> 
+    # make something resizable 
+    element = $('#resizableClassArea').val()
+    $(element).resizable()
 
   # get clicked tags
   $('body').on "click", "h1, h2, h3, p, a, li", (e) -> 
@@ -286,7 +350,15 @@ wrapElement = (wrapElement) ->
 
 # method for changing the tagName of an element 
 changeTagName = (tagName) -> 
-
   if tagName?
     $('.clicked').replaceWith -> 
       $("<#{tagName} />").append $('.clicked').contents()
+
+# method for adding element to existing div 
+addElementToDiv = (classToAdd) -> 
+  if classToAdd? 
+
+    # change from "hero-unit" to ".hero-unit"
+    classToAdd = ".#{classToAdd}"
+    element = $('.clicked')
+    $(classToAdd).append(element)
