@@ -12,8 +12,7 @@
 
   "content_scripts": [
     {
-      // "http://localhost:5000/*"
-      "matches": ["http://*/*", "https://*/*"],
+      "matches": ["http://localhost:*/"],
       "css": ["bootstrap.min.css"],
       "js": ["jquery-1.9.1.min.js", "jquery-ui-1.10.2.custom.min.js", "bootstrap.js", "contentscript.js"] 
     }

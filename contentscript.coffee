@@ -1,4 +1,134 @@
+#############################################################################
+#############################################################################
+############################# LINKED LIST CODE ##############################
+#############################################################################
+#############################################################################
+
+
+# "Classic" linked list implementation that doesn't keep track of its size.
+class LinkedList
+
+  ->
+    this._head = null # Pointer to the first item in the list.
+
+
+  # Appends some data to the end of the list. This method traverses the existing
+  # list and places the value at the end in a new node.
+  add: (element, method, tagName) ->
+
+    # Create a new node object to wrap the data.
+    node = element: element, method: method, tagName: tagName, next: null
+
+    current = this._head or= node
+
+    if this._head isnt node
+      (current = current.next) while current.next
+      current.next = node
+
+    this
+
+
+  # Retrieves the data at the given position in the list.
+  item: (index) ->
+
+    # Check for out-of-bounds values.
+    return null if index < 0
+
+    current = this._head or null
+    i = -1
+
+    # Advance through the list.
+    (current = current.next) while current and index > (i += 1)
+
+    # Return null if we've reached the end.
+    current and current.data
+
+  # Return the last item in the list and remove it 
+  pop: -> 
+    current = this._head
+
+    # go through the list until we reach null
+    while current.next is not null
+      prev = current
+      current = current.next
+
+    # delete node
+    data = current
+
+    if prev?
+      prev.next = null
+    else this._head = null
+
+    data
+
+  # Remove the item from the given location in the list.
+  remove: (index) ->
+
+    # Check for out-of-bounds values.
+    return null if index < 0
+
+    current = this._head or null
+    i = -1
+
+    # Special case: removing the first item.
+    if index is 0
+      this._head = current.next
+    else
+
+      # Find the right location.
+      ([previous, current] = [current, current.next]) while index > (i += 1)
+
+      # Skip over the item to remove.
+      previous.next = current.next
+
+    # Return the value.
+    current and current.data
+
+
+  # Calculate the number of items in the list.
+  size: ->
+    current = this._head
+    count = 0
+
+    while current
+      count += 1
+      current = current.next
+
+    count
+
+
+  # Convert the list into an array.
+  toArray: ->
+    result  = []
+    current = this._head
+
+    while current
+      result.push current.data
+      current = current.next
+
+    result
+
+
+  # The string representation of the linked list.
+  toString: -> this.toArray().toString()
+
+
+# Tests.
+commandList = new LinkedList
+
+#############################################################################
+#############################################################################
+############################# START CONTENTSCRIPT CODE ######################
+#############################################################################
+#############################################################################
+
 $(document).ready ->
+
+#############################################################################
+#############################################################################
+############################# INJECTED FLASH MESSAGES #######################
+#############################################################################
+#############################################################################
 
   # info flash messages 
   $('body').prepend('
@@ -112,6 +242,26 @@ $(document).ready ->
     </div>
     ')
 
+  # info fail revert messages 
+  $('body').prepend('
+     <div id="failRevertFlash" class="hide alert alert-error" style="
+    z-index: 10000000;
+    position: fixed;
+    left: 41%;
+    top: 2%;
+    width: 200px;
+      ">
+      <a class="close" id= "closeMyFlash" href="#">×</a>
+      <p>No changes to revert</p>
+    </div>
+    ')
+
+#############################################################################
+#############################################################################
+############################# INJECTED MODALS ###############################
+#############################################################################
+#############################################################################
+
   # modal for changing font 
   $('body').append('
       <!-- Modal -->
@@ -198,7 +348,7 @@ $(document).ready ->
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-          <button id="changeTagName" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
+          <button id="changeTagNameSubmit" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
         </div>
       </div>  
     ')
@@ -257,6 +407,12 @@ $(document).ready ->
       </div>  
     ')
 
+#############################################################################
+#############################################################################
+############################# KEYBINDINGS ###################################
+#############################################################################
+#############################################################################
+
   $(document).bind 'keypress', (e) ->
 
     # Display help menu
@@ -283,8 +439,12 @@ $(document).ready ->
 
     # make something draggable to a 50 x 50 grid ( shift + D)
     if event.shiftKey and event.which is 68
+
+      # show flash
       $('#draggableFlash').fadeIn 1500, -> 
         $('#draggableFlash').fadeOut()
+
+      # make something draggable
       $('.clicked').draggable({
 
         # constrain dragged element to 50 x 50 grid
@@ -301,6 +461,10 @@ $(document).ready ->
         opacity: 1
         })
 
+      # add it to the list of commands done
+      commandList.add $('.clicked')
+      console.log commandList
+
     # method for adding element to a class ( shift + A )
     if event.shiftKey and event.which is 65
       $('#addElementToDivModal').modal()
@@ -315,10 +479,37 @@ $(document).ready ->
 
     # revert change ( shift + R)
     if event.shiftKey and event.which is 90 
-      $('#revertFlash').fadeIn 1500, -> 
-        $(this).fadeOut()
 
+      # show flash
+      if commandList.size() > 0
+        $('#revertFlash').fadeIn 1500, -> 
+          $(this).fadeOut()
 
+        # get last element in list
+        action = commandList.pop()
+        element = action.element
+        method = action.method
+        tagName = action.tagName
+
+        if method is "changeTagName"
+          $(element).hide()
+
+          $(element).replaceWith -> 
+            $("<#{tagName} />").append $(element).contents()
+
+        else
+          # revert changes of element 
+          $(element).removeAttr('style');
+
+      else 
+        $('#failRevertFlash').fadeIn 1500, ->
+          $(this).fadeOut()
+
+#############################################################################
+#############################################################################
+############################# MESSAGE LISTENERS #############################
+#############################################################################
+#############################################################################
 
    # message listener 
   chrome.extension.onMessage.addListener (request, sender, sendResponse) -> 
@@ -383,6 +574,12 @@ $(document).ready ->
     if request.action is "changeFont"
       changeFont(request.font, request.fontSize, request.color)
 
+#############################################################################
+#############################################################################
+############################# CLICK LISTENERS ###############################
+#############################################################################
+#############################################################################
+
   # click listener for change font in modal
   $('body').on 'click', "#fontChange", (e) -> 
      # get font type
@@ -401,6 +598,11 @@ $(document).ready ->
     $("#changeFontFlash").fadeIn 1500, -> 
       $(this).fadeOut()
 
+    # add to list of commands done
+    commandList.add $('.clicked')
+
+    console.log commandList
+
   # click listener for wrap element in modal 
   $('body').on 'click', "#wrapElement", (e) -> 
     # get element
@@ -411,8 +613,15 @@ $(document).ready ->
     $('#wrapClassFlash').fadeIn 1500, -> 
       $(this).fadeOut()
 
+    # add to list of commands done
+    commandList.add $('.clicked')
+
   # click listener for change tagName in modal 
-  $('body').on 'click', "#changeTagNameModal", (e) -> 
+  $('body').on 'click', "#changeTagNameSubmit", (e) -> 
+
+     # add to list of commands done
+    commandList.add $('.clicked'), "changeTagName", $('.clicked').prop('tagName').toLowerCase()
+
     # get tagName 
     tagName = $('#changeTagNameArea').val()
     changeTagName tagName
@@ -435,6 +644,9 @@ $(document).ready ->
     $('#addToClassFlash').fadeIn 1500, ->
       $(this).fadeOut()
 
+    # add to list of commands done
+    commandList.add $('.clicked')
+
   # click listener for resizable
   $('body').on 'click', '#makeResizable', (e) -> 
     # make something resizable 
@@ -444,6 +656,9 @@ $(document).ready ->
     # show flash 
     $('#resizableFlash').fadeIn 1500, ->
       $(this).fadeOut()
+
+    # add to list of commands done
+    commandList.add $('.clicked')
 
   # click listener for modify class 
   $('body').on 'click', "#modifyClass", (e) -> 
@@ -459,6 +674,9 @@ $(document).ready ->
 
     $('#modifyClassFlash').fadeIn 1500, ->
       $(this).fadeOut()
+
+    # add to list of commands done
+    commandList.add $('.clicked')
 
   # get clicked tags
   $('body').on "click", "h1, h2, h3, p, a, li", (e) -> 
@@ -482,6 +700,13 @@ $(document).ready ->
       "tagName": x.prop("tagName").toLowerCase()
       "fontSize": x.css("font-size")
     }
+
+
+#############################################################################
+#############################################################################
+############################# METHODS FOR CHANGING THINGS ###################
+#############################################################################
+#############################################################################
 
 # method for changing the font 
 changeFont = (font, fontSize, color) -> 
