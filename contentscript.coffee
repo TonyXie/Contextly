@@ -3,14 +3,112 @@ $(document).ready ->
   # info flash messages 
   $('body').prepend('
      <div id="draggableFlash" class="hide alert alert-success" style="
-    z-index: 1000;
-    position: absolute;
+    z-index: 10000000;
+    position: fixed;
     left: 41%;
     top: 2%;
     width: 200px;
-">
+      ">
       <a class="close" id= "closeMyFlash" href="#">×</a>
-      <p>Element made draggable!</p>
+      <p>Element made draggable</p>
+    </div>
+    ')
+
+  # info change font message
+  $('body').prepend('
+     <div id="changeFontFlash" class="hide alert alert-success" style="
+    z-index: 10000000;
+    position: fixed;
+    left: 41%;
+    top: 2%;
+    width: 200px;
+      ">
+      <a class="close" id= "closeMyFlash" href="#">×</a>
+      <p>Font changed</p>
+    </div>
+    ')
+
+  # info wrap class messages 
+  $('body').prepend('
+     <div id="wrapClassFlash" class="hide alert alert-success" style="
+    z-index: 10000000;
+    position: fixed;
+    left: 41%;
+    top: 2%;
+    width: 200px;
+      ">
+      <a class="close" id= "closeMyFlash" href="#">×</a>
+      <p>Element wrapped in specified div</p>
+    </div>
+    ')
+
+  # info add to div messages 
+  $('body').prepend('
+     <div id="addToClassFlash" class="hide alert alert-success" style="
+    z-index: 10000000;
+    position: fixed;
+    left: 41%;
+    top: 2%;
+    width: 200px;
+      ">
+      <a class="close" id= "closeMyFlash" href="#">×</a>
+      <p>Element added to specified div</p>
+    </div>
+    ')
+
+  # info change tagName messages 
+  $('body').prepend('
+     <div id="changeTagNameFlash" class="hide alert alert-success" style="
+    z-index: 10000000;
+    position: fixed;
+    left: 41%;
+    top: 2%;
+    width: 200px;
+      ">
+      <a class="close" id= "closeMyFlash" href="#">×</a>
+      <p>Element\'s tagName changed</p>
+    </div>
+    ')
+
+  # info modify class messages 
+  $('body').prepend('
+     <div id="modifyClassFlash" class="hide alert alert-success" style="
+    z-index: 10000000;
+    position: fixed;
+    left: 41%;
+    top: 2%;
+    width: 200px;
+      ">
+      <a class="close" id= "closeMyFlash" href="#">×</a>
+      <p>Class changed</p>
+    </div>
+    ')
+
+  # info resizable messages 
+  $('body').prepend('
+     <div id="resizableFlash" class="hide alert alert-success" style="
+    z-index: 10000000;
+    position: fixed;
+    left: 41%;
+    top: 2%;
+    width: 200px;
+      ">
+      <a class="close" id= "closeMyFlash" href="#">×</a>
+      <p>Element made resizable</p>
+    </div>
+    ')
+
+  # info revert messages 
+  $('body').prepend('
+     <div id="revertFlash" class="hide alert alert-success" style="
+    z-index: 10000000;
+    position: fixed;
+    left: 41%;
+    top: 2%;
+    width: 200px;
+      ">
+      <a class="close" id= "closeMyFlash" href="#">×</a>
+      <p>Change reverted</p>
     </div>
     ')
 
@@ -62,6 +160,8 @@ $(document).ready ->
           <h3>Change tagName: Shift + T</h3>
           <h3>Make element draggable: Shift + D</h3>
           <h3>Add element to existing div: Shift + A</h3>
+          <h3>Choose element to make resizable: Shift + R</h3>
+          <h3>Modify existing class: Shift + M</h3>
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -137,6 +237,25 @@ $(document).ready ->
       </div>  
     ')
 
+  # change class thingies modal
+  $('body').append('
+      <!-- Modal -->
+      <div id="modifyClassModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+          <h3 id="myModalLabel">Change class things</h3>
+        </div>
+        <div class="modal-body">
+          <b style="font-size: 50px">.</b><textarea name="Tony" id="modifyClassArea" cols="1" rows="1">Choose class</textarea>
+            <textarea name="Tony" id="modifyClassBackgroundColor" cols="1" rows="1">Background color?</textarea>
+            <textarea name="Tony" id="modifyClassAreaHeight" cols="1" rows="1">Height</textarea>
+            <textarea name="Tony" id="modifyClassAreaWidth" cols="1" rows="1">Width</textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          <button id="modifyClass" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
+        </div>
+      </div>  
+    ')
 
   $(document).bind 'keypress', (e) ->
 
@@ -144,7 +263,7 @@ $(document).ready ->
     if event.shiftKey and event.which is 72
       $("#helpModal").modal()
 
-     # change font-size ( shift + F )
+     # change font specifications ( shift + F )
     if event.shiftKey and event.which is 70 
       # get current font-size 
       currFontSize = $('.clicked').css('font-size')
@@ -189,6 +308,15 @@ $(document).ready ->
     # method for making element resizable ( shift + R )
     if event.shiftKey and event.which is 82 
       $('#resizableModal').modal()
+
+    # modify class ( shift + M )
+    if event.shiftKey and event.which is 77
+      $("#modifyClassModal").modal()
+
+    # revert change ( shift + R)
+    if event.shiftKey and event.which is 90 
+      $('#revertFlash').fadeIn 1500, -> 
+        $(this).fadeOut()
 
 
 
@@ -269,11 +397,19 @@ $(document).ready ->
     # call changeFont
     changeFont(font, fontSize, color)
 
+    # show flash 
+    $("#changeFontFlash").fadeIn 1500, -> 
+      $(this).fadeOut()
+
   # click listener for wrap element in modal 
   $('body').on 'click', "#wrapElement", (e) -> 
     # get element
     classToWrap = $('#wrapElememtArea').val()
     wrapElement classToWrap
+
+    # show flash 
+    $('#wrapClassFlash').fadeIn 1500, -> 
+      $(this).fadeOut()
 
   # click listener for change tagName in modal 
   $('body').on 'click', "#changeTagNameModal", (e) -> 
@@ -281,9 +417,13 @@ $(document).ready ->
     tagName = $('#changeTagNameArea').val()
     changeTagName tagName
 
+    # show flash 
+    $('#changeTagNameFlash').fadeIn 1500, -> 
+      $(this).fadeOut()
+
   # click listener for close flash
   $('body').on 'click', '#closeMyFlash', (e) -> 
-    $('#draggableFlash').fadeOut()
+    $(this).fadeOut()
 
   # click listener to add element to an existing div
   $('body').on 'click', '#addElementToDiv', (e) -> 
@@ -291,10 +431,34 @@ $(document).ready ->
     classToAdd = $('#addElementToDivArea').val()
     addElementToDiv classToAdd
 
+    # show flash 
+    $('#addToClassFlash').fadeIn 1500, ->
+      $(this).fadeOut()
+
+  # click listener for resizable
   $('body').on 'click', '#makeResizable', (e) -> 
     # make something resizable 
-    element = $('#resizableClassArea').val()
+    element = "." + $('#resizableClassArea').val()
     $(element).resizable()
+
+    # show flash 
+    $('#resizableFlash').fadeIn 1500, ->
+      $(this).fadeOut()
+
+  # click listener for modify class 
+  $('body').on 'click', "#modifyClass", (e) -> 
+    # get variables 
+    element = "." + $('#modifyClassArea').val()
+    background = $('#modifyClassBackgroundColor').val()
+    height = $('#modifyClassAreaHeight').val()
+    width = $('#modifyClassAreaWidth').val()
+
+    $(element).css('background', background)
+    $(element).css('height', height)
+    $(element).css('width', width)
+
+    $('#modifyClassFlash').fadeIn 1500, ->
+      $(this).fadeOut()
 
   # get clicked tags
   $('body').on "click", "h1, h2, h3, p, a, li", (e) -> 

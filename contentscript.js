@@ -5,14 +5,98 @@
   $(document).ready(function() {
     $('body').prepend('\
      <div id="draggableFlash" class="hide alert alert-success" style="\
-    z-index: 1000;\
-    position: absolute;\
+    z-index: 10000000;\
+    position: fixed;\
     left: 41%;\
     top: 2%;\
     width: 200px;\
-">\
+      ">\
       <a class="close" id= "closeMyFlash" href="#">×</a>\
-      <p>Element made draggable!</p>\
+      <p>Element made draggable</p>\
+    </div>\
+    ');
+    $('body').prepend('\
+     <div id="changeFontFlash" class="hide alert alert-success" style="\
+    z-index: 10000000;\
+    position: fixed;\
+    left: 41%;\
+    top: 2%;\
+    width: 200px;\
+      ">\
+      <a class="close" id= "closeMyFlash" href="#">×</a>\
+      <p>Font changed</p>\
+    </div>\
+    ');
+    $('body').prepend('\
+     <div id="wrapClassFlash" class="hide alert alert-success" style="\
+    z-index: 10000000;\
+    position: fixed;\
+    left: 41%;\
+    top: 2%;\
+    width: 200px;\
+      ">\
+      <a class="close" id= "closeMyFlash" href="#">×</a>\
+      <p>Element wrapped in specified div</p>\
+    </div>\
+    ');
+    $('body').prepend('\
+     <div id="addToClassFlash" class="hide alert alert-success" style="\
+    z-index: 10000000;\
+    position: fixed;\
+    left: 41%;\
+    top: 2%;\
+    width: 200px;\
+      ">\
+      <a class="close" id= "closeMyFlash" href="#">×</a>\
+      <p>Element added to specified div</p>\
+    </div>\
+    ');
+    $('body').prepend('\
+     <div id="changeTagNameFlash" class="hide alert alert-success" style="\
+    z-index: 10000000;\
+    position: fixed;\
+    left: 41%;\
+    top: 2%;\
+    width: 200px;\
+      ">\
+      <a class="close" id= "closeMyFlash" href="#">×</a>\
+      <p>Element\'s tagName changed</p>\
+    </div>\
+    ');
+    $('body').prepend('\
+     <div id="modifyClassFlash" class="hide alert alert-success" style="\
+    z-index: 10000000;\
+    position: fixed;\
+    left: 41%;\
+    top: 2%;\
+    width: 200px;\
+      ">\
+      <a class="close" id= "closeMyFlash" href="#">×</a>\
+      <p>Class changed</p>\
+    </div>\
+    ');
+    $('body').prepend('\
+     <div id="resizableFlash" class="hide alert alert-success" style="\
+    z-index: 10000000;\
+    position: fixed;\
+    left: 41%;\
+    top: 2%;\
+    width: 200px;\
+      ">\
+      <a class="close" id= "closeMyFlash" href="#">×</a>\
+      <p>Element made resizable</p>\
+    </div>\
+    ');
+    $('body').prepend('\
+     <div id="revertFlash" class="hide alert alert-success" style="\
+    z-index: 10000000;\
+    position: fixed;\
+    left: 41%;\
+    top: 2%;\
+    width: 200px;\
+      ">\
+      <a class="close" id= "closeMyFlash" href="#">×</a>\
+      <p>Change reverted</p>\
     </div>\
     ');
     $('body').append('\
@@ -60,6 +144,8 @@
           <h3>Change tagName: Shift + T</h3>\
           <h3>Make element draggable: Shift + D</h3>\
           <h3>Add element to existing div: Shift + A</h3>\
+          <h3>Choose element to make resizable: Shift + R</h3>\
+          <h3>Modify existing class: Shift + M</h3>\
         </div>\
         <div class="modal-footer">\
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
@@ -126,6 +212,24 @@
         </div>\
       </div>  \
     ');
+    $('body').append('\
+      <!-- Modal -->\
+      <div id="modifyClassModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
+        <div class="modal-header">\
+          <h3 id="myModalLabel">Change class things</h3>\
+        </div>\
+        <div class="modal-body">\
+          <b style="font-size: 50px">.</b><textarea name="Tony" id="modifyClassArea" cols="1" rows="1">Choose class</textarea>\
+            <textarea name="Tony" id="modifyClassBackgroundColor" cols="1" rows="1">Background color?</textarea>\
+            <textarea name="Tony" id="modifyClassAreaHeight" cols="1" rows="1">Height</textarea>\
+            <textarea name="Tony" id="modifyClassAreaWidth" cols="1" rows="1">Width</textarea>\
+        </div>\
+        <div class="modal-footer">\
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
+          <button id="modifyClass" class="btn btn-primary" data-dismiss="modal" >Save changes</button>\
+        </div>\
+      </div>  \
+    ');
     $(document).bind('keypress', function(e) {
       var currFontSize, currTagName;
       if (event.shiftKey && event.which === 72) {
@@ -161,7 +265,15 @@
         $('#addElementToDivModal').modal();
       }
       if (event.shiftKey && event.which === 82) {
-        return $('#resizableModal').modal();
+        $('#resizableModal').modal();
+      }
+      if (event.shiftKey && event.which === 77) {
+        $("#modifyClassModal").modal();
+      }
+      if (event.shiftKey && event.which === 90) {
+        return $('#revertFlash').fadeIn(1500, function() {
+          return $(this).fadeOut();
+        });
       }
     });
     chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
@@ -204,30 +316,58 @@
       font = $('#font-list').val();
       fontSize = $("#changeFontSize").val();
       color = $("#fontColor").val();
-      return changeFont(font, fontSize, color);
+      changeFont(font, fontSize, color);
+      return $("#changeFontFlash").fadeIn(1500, function() {
+        return $(this).fadeOut();
+      });
     });
     $('body').on('click', "#wrapElement", function(e) {
       var classToWrap;
       classToWrap = $('#wrapElememtArea').val();
-      return wrapElement(classToWrap);
+      wrapElement(classToWrap);
+      return $('#wrapClassFlash').fadeIn(1500, function() {
+        return $(this).fadeOut();
+      });
     });
     $('body').on('click', "#changeTagNameModal", function(e) {
       var tagName;
       tagName = $('#changeTagNameArea').val();
-      return changeTagName(tagName);
+      changeTagName(tagName);
+      return $('#changeTagNameFlash').fadeIn(1500, function() {
+        return $(this).fadeOut();
+      });
     });
     $('body').on('click', '#closeMyFlash', function(e) {
-      return $('#draggableFlash').fadeOut();
+      return $(this).fadeOut();
     });
     $('body').on('click', '#addElementToDiv', function(e) {
       var classToAdd;
       classToAdd = $('#addElementToDivArea').val();
-      return addElementToDiv(classToAdd);
+      addElementToDiv(classToAdd);
+      return $('#addToClassFlash').fadeIn(1500, function() {
+        return $(this).fadeOut();
+      });
     });
     $('body').on('click', '#makeResizable', function(e) {
       var element;
-      element = $('#resizableClassArea').val();
-      return $(element).resizable();
+      element = "." + $('#resizableClassArea').val();
+      $(element).resizable();
+      return $('#resizableFlash').fadeIn(1500, function() {
+        return $(this).fadeOut();
+      });
+    });
+    $('body').on('click', "#modifyClass", function(e) {
+      var background, element, height, width;
+      element = "." + $('#modifyClassArea').val();
+      background = $('#modifyClassBackgroundColor').val();
+      height = $('#modifyClassAreaHeight').val();
+      width = $('#modifyClassAreaWidth').val();
+      $(element).css('background', background);
+      $(element).css('height', height);
+      $(element).css('width', width);
+      return $('#modifyClassFlash').fadeIn(1500, function() {
+        return $(this).fadeOut();
+      });
     });
     return $('body').on("click", "h1, h2, h3, p, a, li", function(e) {
       var x;
