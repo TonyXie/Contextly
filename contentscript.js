@@ -44,7 +44,7 @@
     LinkedList.prototype.pop = function() {
       var current, data, prev;
       current = this._head;
-      while (current.next === !null) {
+      while (current.next !== null) {
         prev = current;
         current = current.next;
       }
@@ -107,6 +107,18 @@
 
   commandList = new LinkedList;
 
+  commandList.add("test", "first but not last", "lol");
+
+  commandList.add("test", "1", "lol");
+
+  commandList.add("test", "3", "lol");
+
+  console.log(commandList);
+
+  console.log(commandList.pop());
+
+  console.log(commandList);
+
   $(document).ready(function() {
     $('body').prepend('\
      <div id="draggableFlash" class="hide alert alert-success" style="\
@@ -138,7 +150,7 @@
     position: fixed;\
     left: 41%;\
     top: 2%;\
-    width: 200px;\
+    width: 230px;\
       ">\
       <a class="close" id= "closeMyFlash" href="#">×</a>\
       <p>Element wrapped in specified div</p>\
@@ -150,7 +162,7 @@
     position: fixed;\
     left: 41%;\
     top: 2%;\
-    width: 200px;\
+    width: 230px;\
       ">\
       <a class="close" id= "closeMyFlash" href="#">×</a>\
       <p>Element added to specified div</p>\
@@ -255,14 +267,15 @@
           <h3 id="myModalLabel">Help Menu</h3>\
         </div>\
         <div class="modal-body">\
-          <h3>Help menu: Shift + H</h3>\
-          <h3>Change font-styles: Shift + F</h3>\
-          <h3>Wrap element with class: Shift + W</h3>\
-          <h3>Change tagName: Shift + T</h3>\
-          <h3>Make element draggable: Shift + D</h3>\
-          <h3>Add element to existing div: Shift + A</h3>\
-          <h3>Choose element to make resizable: Shift + R</h3>\
-          <h3>Modify existing class: Shift + M</h3>\
+          <p>Help menu: Shift + H</p>\
+          <p>Change font-styles: Shift + F</p>\
+          <p>Wrap element with class: Shift + W</p>\
+          <p>Change tagName: Shift + T</p>\
+          <p>Make element draggable: Shift + D</p>\
+          <p>Add element to existing div: Shift + A</p>\
+          <p>Choose element to make resizable: Shift + R</p>\
+          <p>Modify existing class: Shift + M</p>\
+          <p>Undo last change: Shift + X</p>\
         </div>\
         <div class="modal-footer">\
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
@@ -400,17 +413,18 @@
           tagName = action.tagName;
           if (method === "changeTagName") {
             $(element).hide();
-            return $(element).replaceWith(function() {
+            $(element).replaceWith(function() {
               return $("<" + tagName + " />").append($(element).contents());
             });
           } else {
-            return $(element).removeAttr('style');
+            $(element).removeAttr('style');
           }
         } else {
-          return $('#failRevertFlash').fadeIn(1500, function() {
+          $('#failRevertFlash').fadeIn(1500, function() {
             return $(this).fadeOut();
           });
         }
+        return console.log(commandList);
       }
     });
     chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
