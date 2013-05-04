@@ -125,7 +125,15 @@ commandList = new LinkedList
 
 $(document).ready ->
   $('.nav').tooltip({"title":"lololol"})
-
+  $( ".nav" ).droppable
+      over: -> 
+        $(this).toolship(show)
+      drop:( event, ui ) ->
+        $( this )
+          .addClass( "ui-state-highlight" )
+          .find( "p" )
+            .html( "Dropped!" )
+      
 #############################################################################
 #############################################################################
 ############################# INJECTED FLASH MESSAGES #######################
@@ -469,7 +477,7 @@ $(document).ready ->
         })
 
       # add it to the list of commands done
-      commandList.add $('.clicked')
+      commandList.add $('.clicked'), 'draggable'
       console.log commandList
 
     # method for adding element to a class ( shift + A )
@@ -527,11 +535,14 @@ $(document).ready ->
           $(parent).append( $(element) )
 
 
-        else
+        else if method is "draggable"
           # revert to original position. Only have to change "left" and "top" 
           # jquery converts right into (-1)left and same for top and down
-          $(element).css('left', '');
-          $(element).css('top', '');          
+          $(element).animate({"top": "0px", "left": "0px"})
+
+        else if method is "changeFont"
+          $(element).removeAttr('style')        
+                
 
       else 
         $('#failRevertFlash').fadeIn 1500, ->
@@ -623,6 +634,13 @@ $(document).ready ->
     # get color 
     color = $("#fontColor").val()
 
+    # add to list of commands done
+    commandList.add $('.clicked'), "changeFont", {
+      "font-family": $('.clicked').css("font-family")
+      "font-size" : $('.clicked').css("font-size")
+      "color" : $('.clicked').css("color")
+    }
+
     # call changeFont
     changeFont(font, fontSize, color)
 
@@ -630,8 +648,7 @@ $(document).ready ->
     $("#changeFontFlash").fadeIn 1500, -> 
       $(this).fadeOut()
 
-    # add to list of commands done
-    commandList.add $('.clicked')
+
 
     console.log commandList
 

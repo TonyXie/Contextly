@@ -112,6 +112,14 @@
     $('.nav').tooltip({
       "title": "lololol"
     });
+    $(".nav").droppable({
+      over: function() {
+        return $(this).toolship(show);
+      },
+      drop: function(event, ui) {
+        return $(this).addClass("ui-state-highlight").find("p").html("Dropped!");
+      }
+    });
     $('body').prepend('\
      <div id="draggableFlash" class="hide alert alert-success" style="\
     z-index: 10000000;\
@@ -384,7 +392,7 @@
           },
           opacity: 1
         });
-        commandList.add($('.clicked'));
+        commandList.add($('.clicked'), 'draggable');
         console.log(commandList);
       }
       if (event.shiftKey && event.which === 65) {
@@ -424,9 +432,13 @@
             parent = details.parent;
             $(element).remove();
             return $(parent).append($(element));
-          } else {
-            $(element).css('left', '');
-            return $(element).css('top', '');
+          } else if (method === "draggable") {
+            return $(element).animate({
+              "top": "0px",
+              "left": "0px"
+            });
+          } else if (method === "changeFont") {
+            return $(element).removeAttr('style');
           }
         } else {
           return $('#failRevertFlash').fadeIn(1500, function() {
@@ -475,11 +487,15 @@
       font = $('#font-list').val();
       fontSize = $("#changeFontSize").val();
       color = $("#fontColor").val();
+      commandList.add($('.clicked'), "changeFont", {
+        "font-family": $('.clicked').css("font-family"),
+        "font-size": $('.clicked').css("font-size"),
+        "color": $('.clicked').css("color")
+      });
       changeFont(font, fontSize, color);
       $("#changeFontFlash").fadeIn(1500, function() {
         return $(this).fadeOut();
       });
-      commandList.add($('.clicked'));
       return console.log(commandList);
     });
     $('body').on('click', "#wrapElement", function(e) {
