@@ -491,21 +491,20 @@ $(document).ready ->
         $('#revertFlash').fadeIn 1500, -> 
           $(this).fadeOut()
 
+        console.log commandList
+
         # get last element in list
         action = commandList.pop()
         element = action.element
         method = action.method
         details = action.details
 
-        if method is "changeTagName"
-          alert element
-          alert method
-          alert details
+        if method is "tagName"
+          tagName = details.tagName
+          content = $('.changeTagNameTarget').text()
 
-          alert $(element).prop('tagName')
-
-          $(element).replaceWith -> 
-            $("<#{tagName} />").append $(element).contents()
+          $('.changeTagNameTarget').replaceWith -> 
+            $("<#{tagName} />").append content
 
         else if method is "modifyClass"
           $(element).css('background', details.background)
@@ -515,6 +514,18 @@ $(document).ready ->
         else if method is "wrapClass"
           $(element).unwrap()
 
+        else if method is "addElementToDiv"
+          classToAdd = ".#{details.classToAdd}"
+          index  = details.index
+          parent = details.parent
+
+          # remove element from div
+          $(element).remove()
+
+          # insert element back to original spot by index
+          $(parent).append( $(element) )
+
+
         else
           # revert changes of element 
           $(element).removeAttr('style');
@@ -522,8 +533,6 @@ $(document).ready ->
       else 
         $('#failRevertFlash').fadeIn 1500, ->
           $(this).fadeOut()
-
-      console.log(commandList)
 
 #############################################################################
 #############################################################################
@@ -600,7 +609,7 @@ $(document).ready ->
 #############################################################################
 #############################################################################
 
-  # click listener for change font in modal
+  ####################### CHANGE FONT ######################################
   $('body').on 'click', "#fontChange", (e) -> 
      # get font type
     font = $('#font-list').val()
@@ -623,7 +632,7 @@ $(document).ready ->
 
     console.log commandList
 
-  # click listener for wrap element in modal 
+  ####################### WRAP ELEMENT ######################################
   $('body').on 'click', "#wrapElement", (e) -> 
     # get element
     classToWrap = $('#wrapElememtArea').val()
@@ -636,40 +645,50 @@ $(document).ready ->
     # add to list of commands done
     commandList.add $('.clicked'), "wrapClass"
 
-  # click listener for change tagName in modal 
+  ####################### CHANGE TAGNAME ######################################
   $('body').on 'click', "#changeTagNameSubmit", (e) -> 
 
     # get tagName 
     tagName = $('#changeTagNameArea').val()
-    changeTagName tagName
-
-    commandList.add $('.clicked'), 
 
     # add to list of commands done
-    commandList.add $('.clicked'), 'tagName', $('.clicked').prop('tagName').toLowerCase()
+    commandList.add $('.clicked'), 'tagName', {
+      "tagName" : $('.clicked').prop('tagName').toLowerCase()
+    }
+
+    changeTagName tagName
 
     # show flash 
     $('#changeTagNameFlash').fadeIn 1500, -> 
       $(this).fadeOut()
 
-  # click listener for close flash
+  ####################### CLOSE FLASH ######################################
   $('body').on 'click', '#closeMyFlash', (e) -> 
     $(this).fadeOut()
 
-  # click listener to add element to an existing div
+  ####################### ADD ELEMENT TO DIV ######################################
   $('body').on 'click', '#addElementToDiv', (e) -> 
     # get class val 
     classToAdd = $('#addElementToDivArea').val()
+
+    parent = $('.clicked').parent()
+
+    commandList.add $('.clicked'), 'addElementToDiv', {
+      "classToAdd": classToAdd
+
+      # get the index of the element in the dom
+      "index": $('*').index( $('.clicked') )
+
+      # get parent 
+      "parent": parent
+    }
     addElementToDiv classToAdd
 
     # show flash 
     $('#addToClassFlash').fadeIn 1500, ->
       $(this).fadeOut()
 
-    # add to list of commands done
-    commandList.add $('.clicked')
-
-  # click listener for resizable
+####################### MAKE RESIZABLE ######################################
   $('body').on 'click', '#makeResizable', (e) -> 
     # make something resizable 
     element = "." + $('#resizableClassArea').val()
@@ -682,7 +701,7 @@ $(document).ready ->
     # add to list of commands done
     commandList.add $('.clicked')
 
-  # click listener for modify class 
+####################### MODIFY CLASS ######################################
   $('body').on 'click', "#modifyClass", (e) -> 
 
     # get variables 
@@ -705,7 +724,7 @@ $(document).ready ->
     $('#modifyClassFlash').fadeIn 1500, ->
       $(this).fadeOut()
 
-  # get clicked tags
+####################### GET CLICKED TAGS ######################################
   $('body').on "click", "h1, h2, h3, p, a, li", (e) -> 
 
     # prevent default
@@ -765,13 +784,10 @@ wrapElement = (wrapElement) ->
   $('.clicked').wrap('<div class=' + '"' + wrapElement + '"' + ' />')
 
 # method for changing the tagName of an element 
-changeTagNamed  = (tagName) -> 
+changeTagName  = (tagName) -> 
   if tagName?
     $('.clicked').replaceWith -> 
-      # add to list of commands done
-      commandList.add $(this), "changeTagName", $('.clicked').prop('tagName').toLowerCase()
-
-      $("<#{tagName} />").append $('.clicked').contents()
+      $("<#{tagName} class = 'changeTagNameTarget'></#{tagName}>").append $('.clicked').contents()
       
 
 
