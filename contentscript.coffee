@@ -116,18 +116,6 @@ class LinkedList
 
 # Tests.
 commandList = new LinkedList
-commandList.add "test", "first but not last", "lol"
-commandList.add "test", "1", "lol"
-
-commandList.add "test", "3", "lol"
-
-console.log commandList
-
-console.log commandList.pop()
-
-console.log commandList
-
-
 
 #############################################################################
 #############################################################################
@@ -506,7 +494,11 @@ $(document).ready ->
         tagName = action.tagName
 
         if method is "changeTagName"
-          $(element).hide()
+          alert element
+          alert method
+          alert tagName
+
+          alert $(element).prop('tagName')
 
           $(element).replaceWith -> 
             $("<#{tagName} />").append $(element).contents()
@@ -635,12 +627,11 @@ $(document).ready ->
   # click listener for change tagName in modal 
   $('body').on 'click', "#changeTagNameSubmit", (e) -> 
 
-     # add to list of commands done
-    commandList.add $('.clicked'), "changeTagName", $('.clicked').prop('tagName').toLowerCase()
-
     # get tagName 
     tagName = $('#changeTagNameArea').val()
     changeTagName tagName
+
+    commandList.add $('.clicked'), 
 
     # show flash 
     $('#changeTagNameFlash').fadeIn 1500, -> 
@@ -692,7 +683,7 @@ $(document).ready ->
       $(this).fadeOut()
 
     # add to list of commands done
-    commandList.add $('.clicked')
+    commandList.add $('.clicked'), 'tagName', $('.clicked').prop('tagName').toLowerCase()
 
   # get clicked tags
   $('body').on "click", "h1, h2, h3, p, a, li", (e) -> 
@@ -757,7 +748,12 @@ wrapElement = (wrapElement) ->
 changeTagName = (tagName) -> 
   if tagName?
     $('.clicked').replaceWith -> 
+      # add to list of commands done
+      commandList.add $(this), "changeTagName", $('.clicked').prop('tagName').toLowerCase()
+
       $("<#{tagName} />").append $('.clicked').contents()
+      
+
 
 # method for adding element to existing div 
 addElementToDiv = (classToAdd) -> 

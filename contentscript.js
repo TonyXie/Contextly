@@ -107,18 +107,6 @@
 
   commandList = new LinkedList;
 
-  commandList.add("test", "first but not last", "lol");
-
-  commandList.add("test", "1", "lol");
-
-  commandList.add("test", "3", "lol");
-
-  console.log(commandList);
-
-  console.log(commandList.pop());
-
-  console.log(commandList);
-
   $(document).ready(function() {
     $('body').prepend('\
      <div id="draggableFlash" class="hide alert alert-success" style="\
@@ -412,7 +400,10 @@
           method = action.method;
           tagName = action.tagName;
           if (method === "changeTagName") {
-            $(element).hide();
+            alert(element);
+            alert(method);
+            alert(tagName);
+            alert($(element).prop('tagName'));
             $(element).replaceWith(function() {
               return $("<" + tagName + " />").append($(element).contents());
             });
@@ -485,12 +476,11 @@
     });
     $('body').on('click', "#changeTagNameSubmit", function(e) {
       var tagName;
-      commandList.add($('.clicked'), "changeTagName", $('.clicked').prop('tagName').toLowerCase());
       tagName = $('#changeTagNameArea').val();
       changeTagName(tagName);
-      return $('#changeTagNameFlash').fadeIn(1500, function() {
+      return commandList.add($('.clicked'), $('#changeTagNameFlash').fadeIn(1500, function() {
         return $(this).fadeOut();
-      });
+      }));
     });
     $('body').on('click', '#closeMyFlash', function(e) {
       return $(this).fadeOut();
@@ -525,7 +515,7 @@
       $('#modifyClassFlash').fadeIn(1500, function() {
         return $(this).fadeOut();
       });
-      return commandList.add($('.clicked'));
+      return commandList.add($('.clicked'), 'tagName', $('.clicked').prop('tagName').toLowerCase());
     });
     return $('body').on("click", "h1, h2, h3, p, a, li", function(e) {
       var x;
@@ -562,6 +552,7 @@
   changeTagName = function(tagName) {
     if (tagName != null) {
       return $('.clicked').replaceWith(function() {
+        commandList.add($(this), "changeTagName", $('.clicked').prop('tagName').toLowerCase());
         return $("<" + tagName + " />").append($('.clicked').contents());
       });
     }
