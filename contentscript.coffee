@@ -454,7 +454,7 @@ $(document).ready ->
       $('.clicked').draggable({
 
         # constrain dragged element to 50 x 50 grid
-        grid: [50,50], 
+        grid: [20,20], 
 
         # fix for not being able to reintialize draggable upon release
         disabled: false,
@@ -529,6 +529,7 @@ $(document).ready ->
         else
           # revert changes of element 
           $(element).removeAttr('style');
+          $(element).removeClass()
 
       else 
         $('#failRevertFlash').fadeIn 1500, ->

@@ -374,7 +374,7 @@
           return $('#draggableFlash').fadeOut();
         });
         $('.clicked').draggable({
-          grid: [50, 50],
+          grid: [20, 20],
           disabled: false,
           stop: function() {
             return $(this).draggable('disable');
@@ -422,7 +422,8 @@
             $(element).remove();
             return $(parent).append($(element));
           } else {
-            return $(element).removeAttr('style');
+            $(element).removeAttr('style');
+            return $(element).removeClass();
           }
         } else {
           return $('#failRevertFlash').fadeIn(1500, function() {
