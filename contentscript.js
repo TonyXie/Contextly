@@ -414,6 +414,8 @@
             $(element).css('background', details.background);
             $(element).css('height', details.height);
             $(element).css('width', details.width);
+          } else if (method === "wrapClass") {
+            $(element).unwrap();
           } else {
             $(element).removeAttr('style');
           }
@@ -479,7 +481,7 @@
       $('#wrapClassFlash').fadeIn(1500, function() {
         return $(this).fadeOut();
       });
-      return commandList.add($('.clicked'));
+      return commandList.add($('.clicked'), "wrapClass");
     });
     $('body').on('click', "#changeTagNameSubmit", function(e) {
       var tagName;

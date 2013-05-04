@@ -512,6 +512,9 @@ $(document).ready ->
           $(element).css('height', details.height)
           $(element).css('width', details.width)
 
+        else if method is "wrapClass"
+          $(element).unwrap()
+
         else
           # revert changes of element 
           $(element).removeAttr('style');
@@ -631,7 +634,7 @@ $(document).ready ->
       $(this).fadeOut()
 
     # add to list of commands done
-    commandList.add $('.clicked')
+    commandList.add $('.clicked'), "wrapClass"
 
   # click listener for change tagName in modal 
   $('body').on 'click', "#changeTagNameSubmit", (e) -> 
