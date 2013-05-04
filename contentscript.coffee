@@ -14,10 +14,10 @@ class LinkedList
 
   # Appends some data to the end of the list. This method traverses the existing
   # list and places the value at the end in a new node.
-  add: (element, method, tagName) ->
+  add: (element, method, details) ->
 
     # Create a new node object to wrap the data.
-    node = element: element, method: method, tagName: tagName, next: null
+    node = element: element, method: method, details: details, next: null
 
     current = this._head or= node
 
@@ -415,10 +415,14 @@ $(document).ready ->
 #############################################################################
 #############################################################################
 
+# keep state if one modal window is down. Don't allow two modal windows at once
+  modalDown = false
+
   $(document).bind 'keypress', (e) ->
 
     # Display help menu
     if event.shiftKey and event.which is 72
+      modalDown = true
       $("#helpModal").modal()
 
      # change font specifications ( shift + F )
@@ -491,17 +495,22 @@ $(document).ready ->
         action = commandList.pop()
         element = action.element
         method = action.method
-        tagName = action.tagName
+        details = action.details
 
         if method is "changeTagName"
           alert element
           alert method
-          alert tagName
+          alert details
 
           alert $(element).prop('tagName')
 
           $(element).replaceWith -> 
             $("<#{tagName} />").append $(element).contents()
+
+        else if method is "modifyClass"
+          $(element).css('background', details.background)
+          $(element).css('height', details.height)
+          $(element).css('width', details.width)
 
         else
           # revert changes of element 
@@ -633,6 +642,9 @@ $(document).ready ->
 
     commandList.add $('.clicked'), 
 
+    # add to list of commands done
+    commandList.add $('.clicked'), 'tagName', $('.clicked').prop('tagName').toLowerCase()
+
     # show flash 
     $('#changeTagNameFlash').fadeIn 1500, -> 
       $(this).fadeOut()
@@ -669,11 +681,19 @@ $(document).ready ->
 
   # click listener for modify class 
   $('body').on 'click', "#modifyClass", (e) -> 
+
     # get variables 
     element = "." + $('#modifyClassArea').val()
     background = $('#modifyClassBackgroundColor').val()
     height = $('#modifyClassAreaHeight').val()
     width = $('#modifyClassAreaWidth').val()
+
+    # add to the list of commands done 
+    commandList.add element, 'modifyClass', {
+      "background" : $(element).css("background")
+      "height" : $(element).css('height') 
+      "width" : $(element).css('width')
+    }
 
     $(element).css('background', background)
     $(element).css('height', height)
@@ -681,9 +701,6 @@ $(document).ready ->
 
     $('#modifyClassFlash').fadeIn 1500, ->
       $(this).fadeOut()
-
-    # add to list of commands done
-    commandList.add $('.clicked'), 'tagName', $('.clicked').prop('tagName').toLowerCase()
 
   # get clicked tags
   $('body').on "click", "h1, h2, h3, p, a, li", (e) -> 
@@ -745,7 +762,7 @@ wrapElement = (wrapElement) ->
   $('.clicked').wrap('<div class=' + '"' + wrapElement + '"' + ' />')
 
 # method for changing the tagName of an element 
-changeTagName = (tagName) -> 
+changeTagNamed  = (tagName) -> 
   if tagName?
     $('.clicked').replaceWith -> 
       # add to list of commands done
