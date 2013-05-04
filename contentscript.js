@@ -109,6 +109,9 @@
 
   $(document).ready(function() {
     var modalDown;
+    $('.nav').tooltip({
+      "title": "lololol"
+    });
     $('body').prepend('\
      <div id="draggableFlash" class="hide alert alert-success" style="\
     z-index: 10000000;\
@@ -422,8 +425,8 @@
             $(element).remove();
             return $(parent).append($(element));
           } else {
-            $(element).removeAttr('style');
-            return $(element).removeClass();
+            $(element).css('left', '');
+            return $(element).css('top', '');
           }
         } else {
           return $('#failRevertFlash').fadeIn(1500, function() {

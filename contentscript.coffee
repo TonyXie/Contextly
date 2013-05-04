@@ -124,6 +124,7 @@ commandList = new LinkedList
 #############################################################################
 
 $(document).ready ->
+  $('.nav').tooltip({"title":"lololol"})
 
 #############################################################################
 #############################################################################
@@ -527,9 +528,10 @@ $(document).ready ->
 
 
         else
-          # revert changes of element 
-          $(element).removeAttr('style');
-          $(element).removeClass()
+          # revert to original position. Only have to change "left" and "top" 
+          # jquery converts right into (-1)left and same for top and down
+          $(element).css('left', '');
+          $(element).css('top', '');          
 
       else 
         $('#failRevertFlash').fadeIn 1500, ->
