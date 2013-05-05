@@ -109,17 +109,6 @@
 
   $(document).ready(function() {
     var modalDown;
-    $('.nav').tooltip({
-      "title": "lololol"
-    });
-    $(".nav").droppable({
-      over: function() {
-        return $(this).toolship(show);
-      },
-      drop: function(event, ui) {
-        return $(this).addClass("ui-state-highlight").find("p").html("Dropped!");
-      }
-    });
     $('body').prepend('\
      <div id="draggableFlash" class="hide alert alert-success" style="\
     z-index: 10000000;\
@@ -250,9 +239,12 @@
             <option value="PT+Sans+Narrow">PT Sans Narrow</option>\
             <option value="PT+Serif">PT Serif</option>\
             <option value="Vollkorn">Vollkorn</option>\
+            <option value="Abel">Abel</option>\
           </select>\
-        <textarea name="Tony" id="changeFontSize" cols="1" rows="1">Current font size:</textarea>\
-        <input id="fontColor" class="color" value="000000" >\
+        <textarea name="Tony" id="changeFontSize" style="width: 280px"cols="1" rows="1">Current font size:</textarea>\
+        <b style="font-size: 20px">R</b><input style="width: 50px" id="fontColorR">\
+        <b style="font-size: 20px">G</b><input style="width: 50px" id="fontColorG">\
+        <b style="font-size: 20px">B</b><input style="width: 50px" id="fontColorB">\
         </div>\
         <div class="modal-footer">\
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
@@ -362,12 +354,16 @@
     ');
     modalDown = false;
     $(document).bind('keypress', function(e) {
-      var action, classToAdd, content, currFontSize, currTagName, details, element, index, method, parent, tagName;
+      var action, classToAdd, color, content, currFontSize, currTagName, details, element, index, method, parent, tagName;
       if (event.shiftKey && event.which === 72) {
         modalDown = true;
         $("#helpModal").modal();
       }
       if (event.shiftKey && event.which === 70) {
+        color = $('.clicked').css("color");
+        $('#fontColorR').val(color.substring(4, 6));
+        $('#fontColorG').val(color.substring(8, 10));
+        $('#fontColorB').val(color.substring(12, 14));
         currFontSize = $('.clicked').css('font-size');
         $("#changeFontSize").val(currFontSize);
         $("#fontModal").modal();
@@ -381,9 +377,7 @@
         $("#changeTagNameModal").modal();
       }
       if (event.shiftKey && event.which === 68) {
-        $('#draggableFlash').fadeIn(1500, function() {
-          return $('#draggableFlash').fadeOut();
-        });
+        $('#draggableFlash').fadeIn(1500);
         $('.clicked').draggable({
           grid: [20, 20],
           disabled: false,
@@ -483,10 +477,13 @@
       }
     });
     $('body').on('click', "#fontChange", function(e) {
-      var color, font, fontSize;
+      var color, colorB, colorG, colorR, font, fontSize;
       font = $('#font-list').val();
       fontSize = $("#changeFontSize").val();
-      color = $("#fontColor").val();
+      colorR = $("#fontColorR").val();
+      colorG = $("#fontColorG").val();
+      colorB = $("#fontColorB").val();
+      color = "rgb(" + colorR + ", " + colorG + ", " + colorB + ")";
       commandList.add($('.clicked'), "changeFont", {
         "font-family": $('.clicked').css("font-family"),
         "font-size": $('.clicked').css("font-size"),
@@ -502,9 +499,7 @@
       var classToWrap;
       classToWrap = $('#wrapElememtArea').val();
       wrapElement(classToWrap);
-      $('#wrapClassFlash').fadeIn(1500, function() {
-        return $(this).fadeOut();
-      });
+      $('#wrapClassFlash').fadeIn(1500);
       return commandList.add($('.clicked'), "wrapClass");
     });
     $('body').on('click', "#changeTagNameSubmit", function(e) {
@@ -582,7 +577,7 @@
     font = font;
     element = $('.clicked');
     fontSize = fontSize;
-    color = "#" + color;
+    color = color;
     $("head").append("    <link href='http://fonts.googleapis.com/css?family=" + font + "' rel='stylesheet' type='text/css'>    ");
     font = font.split("+").join(" ");
     element.css('font-family', font);

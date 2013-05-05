@@ -124,15 +124,6 @@ commandList = new LinkedList
 #############################################################################
 
 $(document).ready ->
-  $('.nav').tooltip({"title":"lololol"})
-  $( ".nav" ).droppable
-      over: -> 
-        $(this).toolship(show)
-      drop:( event, ui ) ->
-        $( this )
-          .addClass( "ui-state-highlight" )
-          .find( "p" )
-            .html( "Dropped!" )
       
 #############################################################################
 #############################################################################
@@ -295,9 +286,12 @@ $(document).ready ->
             <option value="PT+Sans+Narrow">PT Sans Narrow</option>
             <option value="PT+Serif">PT Serif</option>
             <option value="Vollkorn">Vollkorn</option>
+            <option value="Abel">Abel</option>
           </select>
-        <textarea name="Tony" id="changeFontSize" cols="1" rows="1">Current font size:</textarea>
-        <input id="fontColor" class="color" value="000000" >
+        <textarea name="Tony" id="changeFontSize" style="width: 280px"cols="1" rows="1">Current font size:</textarea>
+        <b style="font-size: 20px">R</b><input style="width: 50px" id="fontColorR">
+        <b style="font-size: 20px">G</b><input style="width: 50px" id="fontColorG">
+        <b style="font-size: 20px">B</b><input style="width: 50px" id="fontColorB">
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -436,6 +430,13 @@ $(document).ready ->
 
      # change font specifications ( shift + F )
     if event.shiftKey and event.which is 70 
+
+      # replace clicked color vals into modal
+      color = $('.clicked').css("color")
+      $('#fontColorR').val(color.substring(4,6))
+      $('#fontColorG').val(color.substring(8,10))
+      $('#fontColorB').val(color.substring(12,14))
+
       # get current font-size 
       currFontSize = $('.clicked').css('font-size')
       $("#changeFontSize").val(currFontSize)
@@ -456,8 +457,7 @@ $(document).ready ->
     if event.shiftKey and event.which is 68
 
       # show flash
-      $('#draggableFlash').fadeIn 1500, -> 
-        $('#draggableFlash').fadeOut()
+      $('#draggableFlash').fadeIn 1500
 
       # make something draggable
       $('.clicked').draggable({
@@ -632,7 +632,10 @@ $(document).ready ->
     fontSize = $("#changeFontSize").val()
 
     # get color 
-    color = $("#fontColor").val()
+    colorR = $("#fontColorR").val()
+    colorG = $("#fontColorG").val()
+    colorB = $("#fontColorB").val()
+    color = "rgb(#{colorR}, #{colorG}, #{colorB})"
 
     # add to list of commands done
     commandList.add $('.clicked'), "changeFont", {
@@ -659,8 +662,7 @@ $(document).ready ->
     wrapElement classToWrap
 
     # show flash 
-    $('#wrapClassFlash').fadeIn 1500, -> 
-      $(this).fadeOut()
+    $('#wrapClassFlash').fadeIn 1500
 
     # add to list of commands done
     commandList.add $('.clicked'), "wrapClass"
@@ -780,7 +782,7 @@ changeFont = (font, fontSize, color) ->
   font = font 
   element = $('.clicked')
   fontSize= fontSize
-  color = "#" + color
+  color = color
 
   # get css stylesheet from googlefonts
   $("head").append("
