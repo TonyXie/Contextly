@@ -264,6 +264,7 @@
           <p>Wrap element with class: Shift + W</p>\
           <p>Change tagName: Shift + T</p>\
           <p>Make element draggable: Shift + D</p>\
+          <p>Make class draggable: Shift + E</p>\
           <p>Add element to existing div: Shift + A</p>\
           <p>Choose element to make resizable: Shift + R</p>\
           <p>Modify existing class: Shift + M</p>\
@@ -289,6 +290,21 @@
         </div>\
       </div>  \
     ');
+    $('body').append('\
+    <!-- Modal -->\
+    <div id="makeClassDraggable" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
+      <div class="modal-header">\
+        <h3 id="myModalLabel">Make class draggable</h3>\
+      </div>\
+      <div class="modal-body">\
+        <b style="font-size: 50px">.</b><textarea name="Tony" id="draggableClassArea" cols="1" rows="1">Make class draggable:</textarea>\
+      </div>\
+      <div class="modal-footer">\
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
+        <button id="makeClassDraggableSubmit" class="btn btn-primary" data-dismiss="modal" >Save changes</button>\
+      </div>\
+    </div>  \
+  ');
     $('body').append('\
       <!-- Modal -->\
       <div id="changeTagNameModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
@@ -376,12 +392,25 @@
         $('#changeTagNameArea').val(currTagName);
         $("#changeTagNameModal").modal();
       }
+      if (event.shiftKey && event.which === 69) {
+        $("#makeClassDraggable").modal();
+      }
       if (event.shiftKey && event.which === 68) {
-        $('#draggableFlash').fadeIn(1500);
+        $('#draggableFlash').fadeIn(1500, function() {
+          return $(this).fadeOut();
+        });
         $('.clicked').draggable({
           grid: [20, 20],
           disabled: false,
           stop: function() {
+            var left, top;
+            $(this).tooltip('destroy');
+            left = $(this).css('left');
+            top = $(this).css('top');
+            $(this).tooltip({
+              'title': "left: " + left + ", top: " + top
+            });
+            $(this).tooltip('show');
             return $(this).draggable('disable');
           },
           opacity: 1
@@ -426,7 +455,7 @@
             parent = details.parent;
             $(element).remove();
             return $(parent).append($(element));
-          } else if (method === "draggable") {
+          } else if (method === "draggable" || "classDraggable") {
             return $(element).animate({
               "top": "0px",
               "left": "0px"
@@ -499,7 +528,9 @@
       var classToWrap;
       classToWrap = $('#wrapElememtArea').val();
       wrapElement(classToWrap);
-      $('#wrapClassFlash').fadeIn(1500);
+      $('#wrapClassFlash').fadeIn(1500, function() {
+        return $(this).fadeOut();
+      });
       return commandList.add($('.clicked'), "wrapClass");
     });
     $('body').on('click', "#changeTagNameSubmit", function(e) {
@@ -539,6 +570,30 @@
       });
       return commandList.add($('.clicked'));
     });
+    $('body').on('click', '#makeClassDraggableSubmit', function(e) {
+      var element;
+      element = "." + $('#draggableClassArea').val();
+      $(element).draggable({
+        grid: [20, 20],
+        disabled: false,
+        stop: function() {
+          var left, top;
+          $(this).tooltip('destroy');
+          left = $(this).css('left');
+          top = $(this).css('top');
+          $(this).tooltip({
+            'title': "left: " + left + ", top: " + top
+          });
+          $(this).tooltip('show');
+          return $(this).draggable('disable');
+        },
+        opacity: 1
+      });
+      $('#draggableFlash').fadeIn(1500, function() {
+        return $(this).fadeOut();
+      });
+      return commandList.add($(element), "classDraggable");
+    });
     $('body').on('click', "#modifyClass", function(e) {
       var background, element, height, width;
       element = "." + $('#modifyClassArea').val();
@@ -557,7 +612,7 @@
         return $(this).fadeOut();
       });
     });
-    return $('body').on("click", "h1, h2, h3, p, a, li", function(e) {
+    return $('body').on("click", "h1, h2, h3, p, a, li, img", function(e) {
       var x;
       e.preventDefault();
       x = $(this);

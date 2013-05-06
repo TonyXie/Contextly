@@ -313,6 +313,7 @@ $(document).ready ->
           <p>Wrap element with class: Shift + W</p>
           <p>Change tagName: Shift + T</p>
           <p>Make element draggable: Shift + D</p>
+          <p>Make class draggable: Shift + E</p>
           <p>Add element to existing div: Shift + A</p>
           <p>Choose element to make resizable: Shift + R</p>
           <p>Modify existing class: Shift + M</p>
@@ -340,6 +341,23 @@ $(document).ready ->
         </div>
       </div>  
     ')
+
+  # make class draggable
+  $('body').append('
+    <!-- Modal -->
+    <div id="makeClassDraggable" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <h3 id="myModalLabel">Make class draggable</h3>
+      </div>
+      <div class="modal-body">
+        <b style="font-size: 50px">.</b><textarea name="Tony" id="draggableClassArea" cols="1" rows="1">Make class draggable:</textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button id="makeClassDraggableSubmit" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
+      </div>
+    </div>  
+  ')
 
   # change tagName modal
   $('body').append('
@@ -453,16 +471,21 @@ $(document).ready ->
       $('#changeTagNameArea').val(currTagName)
       $("#changeTagNameModal").modal()
 
+    # make class draggable ( shift + D + C)
+    if event.shiftKey and event.which is 69
+      $("#makeClassDraggable").modal()
+
     # make something draggable to a 50 x 50 grid ( shift + D)
     if event.shiftKey and event.which is 68
 
       # show flash
-      $('#draggableFlash').fadeIn 1500
+      $('#draggableFlash').fadeIn 1500, ->
+        $(this).fadeOut()
 
       # make something draggable
       $('.clicked').draggable({
 
-        # constrain dragged element to 50 x 50 grid
+        # constrain dragged element to 20 x 20 grid
         grid: [20,20], 
 
         # fix for not being able to reintialize draggable upon release
@@ -470,6 +493,14 @@ $(document).ready ->
 
         # make element not draggable upon release
         stop: -> 
+          # some tooltipping action 
+          $(this).tooltip('destroy')
+          left = $(this).css('left')
+          top = $(this).css('top')
+          $(this).tooltip('title': "left: #{left}, top: #{top}")
+          $(this).tooltip('show')
+
+          # disable the draggable
           $(this).draggable('disable')
 
         # don't change opacity while dragging
@@ -492,7 +523,7 @@ $(document).ready ->
     if event.shiftKey and event.which is 77
       $("#modifyClassModal").modal()
 
-    # revert change ( shift + R)
+    # revert change ( shift + Z)
     if event.shiftKey and event.which is 90 
 
       # show flash
@@ -535,14 +566,13 @@ $(document).ready ->
           $(parent).append( $(element) )
 
 
-        else if method is "draggable"
+        else if method is "draggable" or "classDraggable"
           # revert to original position. Only have to change "left" and "top" 
           # jquery converts right into (-1)left and same for top and down
           $(element).animate({"top": "0px", "left": "0px"})
 
         else if method is "changeFont"
-          $(element).removeAttr('style')        
-                
+          $(element).removeAttr('style')                        
 
       else 
         $('#failRevertFlash').fadeIn 1500, ->
@@ -662,7 +692,8 @@ $(document).ready ->
     wrapElement classToWrap
 
     # show flash 
-    $('#wrapClassFlash').fadeIn 1500
+    $('#wrapClassFlash').fadeIn 1500, -> 
+      $(this).fadeOut()
 
     # add to list of commands done
     commandList.add $('.clicked'), "wrapClass"
@@ -723,6 +754,42 @@ $(document).ready ->
     # add to list of commands done
     commandList.add $('.clicked')
 
+####################### MAKE CLASS DRAGGABLE ####################################
+
+  $('body').on 'click', '#makeClassDraggableSubmit', (e) ->
+    # make class draggable 
+    element = "." + $('#draggableClassArea').val()
+    $(element).draggable({
+
+        # constrain dragged element to 20 x 20 grid
+        grid: [20,20], 
+
+        # fix for not being able to reintialize draggable upon release
+        disabled: false,
+
+        # make element not draggable upon release
+        stop: -> 
+          # some tooltipping action 
+          $(this).tooltip('destroy')
+          left = $(this).css('left')
+          top = $(this).css('top')
+          $(this).tooltip('title': "left: #{left}, top: #{top}")
+          $(this).tooltip('show')
+
+          # disable the draggable
+          $(this).draggable('disable')
+
+        # don't change opacity while dragging
+        opacity: 1
+        })
+
+    # show flash 
+    $('#draggableFlash').fadeIn 1500, ->
+      $(this).fadeOut()
+
+    # add to list of commands done
+    commandList.add $(element), "classDraggable"
+
 ####################### MODIFY CLASS ######################################
   $('body').on 'click', "#modifyClass", (e) -> 
 
@@ -747,7 +814,7 @@ $(document).ready ->
       $(this).fadeOut()
 
 ####################### GET CLICKED TAGS ######################################
-  $('body').on "click", "h1, h2, h3, p, a, li", (e) -> 
+  $('body').on "click", "h1, h2, h3, p, a, li, img", (e) -> 
 
     # prevent default
     e.preventDefault()
