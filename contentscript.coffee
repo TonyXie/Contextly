@@ -131,8 +131,13 @@ $(document).ready ->
 #############################################################################
 #############################################################################
 
+  # make container to put all the flashes into 
+  $('body').append('
+    <div id="ContextlyFlashesHolder"></div>
+    ')
+
   # info flash messages 
-  $('body').prepend('
+  $('#ContextlyFlashesHolder').prepend('
      <div id="draggableFlash" class="hide alert alert-success" style="
     z-index: 10000000;
     position: fixed;
@@ -146,7 +151,7 @@ $(document).ready ->
     ')
 
   # info change font message
-  $('body').prepend('
+  $('#ContextlyFlashesHolder').prepend('
      <div id="changeFontFlash" class="hide alert alert-success" style="
     z-index: 10000000;
     position: fixed;
@@ -160,7 +165,7 @@ $(document).ready ->
     ')
 
   # info wrap class messages 
-  $('body').prepend('
+  $('#ContextlyFlashesHolder').prepend('
      <div id="wrapClassFlash" class="hide alert alert-success" style="
     z-index: 10000000;
     position: fixed;
@@ -174,7 +179,7 @@ $(document).ready ->
     ')
 
   # info add to div messages 
-  $('body').prepend('
+  $('#ContextlyFlashesHolder').prepend('
      <div id="addToClassFlash" class="hide alert alert-success" style="
     z-index: 10000000;
     position: fixed;
@@ -188,7 +193,7 @@ $(document).ready ->
     ')
 
   # info change tagName messages 
-  $('body').prepend('
+  $('#ContextlyFlashesHolder').prepend('
      <div id="changeTagNameFlash" class="hide alert alert-success" style="
     z-index: 10000000;
     position: fixed;
@@ -202,7 +207,7 @@ $(document).ready ->
     ')
 
   # info modify class messages 
-  $('body').prepend('
+  $('#ContextlyFlashesHolder').prepend('
      <div id="modifyClassFlash" class="hide alert alert-success" style="
     z-index: 10000000;
     position: fixed;
@@ -216,7 +221,7 @@ $(document).ready ->
     ')
 
   # info resizable messages 
-  $('body').prepend('
+  $('#ContextlyFlashesHolder').prepend('
      <div id="resizableFlash" class="hide alert alert-success" style="
     z-index: 10000000;
     position: fixed;
@@ -230,7 +235,7 @@ $(document).ready ->
     ')
 
   # info revert messages 
-  $('body').prepend('
+  $('#ContextlyFlashesHolder').prepend('
      <div id="revertFlash" class="hide alert alert-success" style="
     z-index: 10000000;
     position: fixed;
@@ -244,7 +249,7 @@ $(document).ready ->
     ')
 
   # info fail revert messages 
-  $('body').prepend('
+  $('#ContextlyFlashesHolder').prepend('
      <div id="failRevertFlash" class="hide alert alert-error" style="
     z-index: 10000000;
     position: fixed;
@@ -263,8 +268,13 @@ $(document).ready ->
 #############################################################################
 #############################################################################
 
-  # modal for changing font 
+  # div to hold all the modals 
   $('body').append('
+    <div id="ContextlyModalsHolder"></div>
+    ')
+
+  # modal for changing font 
+  $('#ContextlyModalsHolder').append('
       <!-- Modal -->
       <div id="fontModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -301,7 +311,7 @@ $(document).ready ->
     ')
   
   # Keyboard shortcuts modal
-  $('body').append('
+  $('#ContextlyModalsHolder').append('
       <!-- Modal -->
       <div id="helpModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -317,7 +327,7 @@ $(document).ready ->
           <p>Add element to existing div: Shift + A</p>
           <p>Choose element to make resizable: Shift + R</p>
           <p>Modify existing class: Shift + M</p>
-          <p>Undo last change: Shift + X</p>
+          <p>Undo last change: Shift + Z</p>
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -326,7 +336,7 @@ $(document).ready ->
     ')
 
   # wrap element in specified class modal
-  $('body').append('
+  $('#ContextlyModalsHolder').append('
       <!-- Modal -->
       <div id="wrapElementModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -343,7 +353,7 @@ $(document).ready ->
     ')
 
   # make class draggable
-  $('body').append('
+  $('#ContextlyModalsHolder').append('
     <!-- Modal -->
     <div id="makeClassDraggable" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-header">
@@ -360,7 +370,7 @@ $(document).ready ->
   ')
 
   # change tagName modal
-  $('body').append('
+  $('#ContextlyModalsHolder').append('
       <!-- Modal -->
       <div id="changeTagNameModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -377,7 +387,7 @@ $(document).ready ->
     ')
 
   # add element to existing div modal
-  $('body').append('
+  $('#ContextlyModalsHolder').append('
       <!-- Modal -->
       <div id="addElementToDivModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -394,7 +404,7 @@ $(document).ready ->
     ')
 
   # make class resizable modal
-  $('body').append('
+  $('#ContextlyModalsHolder').append('
       <!-- Modal -->
       <div id="resizableModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -411,7 +421,7 @@ $(document).ready ->
     ')
 
   # change class thingies modal
-  $('body').append('
+  $('#ContextlyModalsHolder').append('
       <!-- Modal -->
       <div id="modifyClassModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -565,87 +575,22 @@ $(document).ready ->
           # insert element back to original spot by index
           $(parent).append( $(element) )
 
+        else if method is "changeFont"
+          $(element).css("font-size", details.font-size)   
+          $(element).css("font-family", details.font-family)   
+          $(element).css("font-color", details.color)   
+
 
         else if method is "draggable" or "classDraggable"
           # revert to original position. Only have to change "left" and "top" 
           # jquery converts right into (-1)left and same for top and down
           $(element).animate({"top": "0px", "left": "0px"})
 
-        else if method is "changeFont"
-          $(element).removeAttr('style')                        
+
 
       else 
         $('#failRevertFlash').fadeIn 1500, ->
           $(this).fadeOut()
-
-#############################################################################
-#############################################################################
-############################# MESSAGE LISTENERS #############################
-#############################################################################
-#############################################################################
-
-   # message listener 
-  chrome.extension.onMessage.addListener (request, sender, sendResponse) -> 
-  
-    # method for loading bootstrap into current page
-    if request.action is "loadBootstrap"
-
-      # inject bootstrap 
-      $("head").append("
-          <link href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css' rel='stylesheet'>
-        ");
-
-      # wrap body in container class 
-      $('body').wrap('<div class="container" />')
-
-    # method for adding wrapping parent nodes with specific classes
-    if request.action is "changeElement"
-      # get the clicked element
-      element = $('.clicked')
-      changeClass = request.changeClass
-
-      # special case for navbar: have to add outer navbar then navbar-inner
-      if changeClass is "navbar"
-
-        # make the navbar
-        element.wrap('<div class="navbar" />')
-        element.addClass('brand')
-        element.wrap('<div class="navbar-inner" />')
-
-        # make the nav-items 
-        $(".navbar-inner").append('<ul class="nav pull-right sortable"></ul>')
-
-      else if changeClass is "nav"
-
-        # get previous content of the element
-        text = element.text()
-
-        # remove the element 
-        element.remove()
-
-        # add item to pre-existing ul.nav
-        $('ul.nav').append("<li><a href='#'>#{text}</a></li>")
-
-      else if changeClass is "addToHero"
-        # add element to hero-unit already existing 
-        $(".hero-unit").append( element )
-
-      else 
-        # add wrapping div to selected element
-        element.wrap('<div class=' + '"' + changeClass + '"' + ' />')
-
-    # method for changing the tagName 
-    if request.action is "changeTagName"
-      changeTag = request.changeTag
-      element = $('.clicked')
-
-      # replace old tag with new tag while keeping the content 
-      element.replaceWith -> 
-        $("<h2 />").append element.contents()
-  
-    # method for changing the font 
-    if request.action is "changeFont"
-      changeFont(request.font, request.fontSize, request.color)
 
 #############################################################################
 #############################################################################

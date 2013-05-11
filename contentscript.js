@@ -109,7 +109,10 @@
 
   $(document).ready(function() {
     var modalDown;
-    $('body').prepend('\
+    $('body').append('\
+    <div id="ContextlyFlashesHolder"></div>\
+    ');
+    $('#ContextlyFlashesHolder').prepend('\
      <div id="draggableFlash" class="hide alert alert-success" style="\
     z-index: 10000000;\
     position: fixed;\
@@ -121,7 +124,7 @@
       <p>Element made draggable</p>\
     </div>\
     ');
-    $('body').prepend('\
+    $('#ContextlyFlashesHolder').prepend('\
      <div id="changeFontFlash" class="hide alert alert-success" style="\
     z-index: 10000000;\
     position: fixed;\
@@ -133,7 +136,7 @@
       <p>Font changed</p>\
     </div>\
     ');
-    $('body').prepend('\
+    $('#ContextlyFlashesHolder').prepend('\
      <div id="wrapClassFlash" class="hide alert alert-success" style="\
     z-index: 10000000;\
     position: fixed;\
@@ -145,7 +148,7 @@
       <p>Element wrapped in specified div</p>\
     </div>\
     ');
-    $('body').prepend('\
+    $('#ContextlyFlashesHolder').prepend('\
      <div id="addToClassFlash" class="hide alert alert-success" style="\
     z-index: 10000000;\
     position: fixed;\
@@ -157,7 +160,7 @@
       <p>Element added to specified div</p>\
     </div>\
     ');
-    $('body').prepend('\
+    $('#ContextlyFlashesHolder').prepend('\
      <div id="changeTagNameFlash" class="hide alert alert-success" style="\
     z-index: 10000000;\
     position: fixed;\
@@ -169,7 +172,7 @@
       <p>Element\'s tagName changed</p>\
     </div>\
     ');
-    $('body').prepend('\
+    $('#ContextlyFlashesHolder').prepend('\
      <div id="modifyClassFlash" class="hide alert alert-success" style="\
     z-index: 10000000;\
     position: fixed;\
@@ -181,7 +184,7 @@
       <p>Class changed</p>\
     </div>\
     ');
-    $('body').prepend('\
+    $('#ContextlyFlashesHolder').prepend('\
      <div id="resizableFlash" class="hide alert alert-success" style="\
     z-index: 10000000;\
     position: fixed;\
@@ -193,7 +196,7 @@
       <p>Element made resizable</p>\
     </div>\
     ');
-    $('body').prepend('\
+    $('#ContextlyFlashesHolder').prepend('\
      <div id="revertFlash" class="hide alert alert-success" style="\
     z-index: 10000000;\
     position: fixed;\
@@ -205,7 +208,7 @@
       <p>Change reverted</p>\
     </div>\
     ');
-    $('body').prepend('\
+    $('#ContextlyFlashesHolder').prepend('\
      <div id="failRevertFlash" class="hide alert alert-error" style="\
     z-index: 10000000;\
     position: fixed;\
@@ -218,6 +221,9 @@
     </div>\
     ');
     $('body').append('\
+    <div id="ContextlyModalsHolder"></div>\
+    ');
+    $('#ContextlyModalsHolder').append('\
       <!-- Modal -->\
       <div id="fontModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
         <div class="modal-header">\
@@ -252,7 +258,7 @@
         </div>\
       </div>  \
     ');
-    $('body').append('\
+    $('#ContextlyModalsHolder').append('\
       <!-- Modal -->\
       <div id="helpModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
         <div class="modal-header">\
@@ -268,14 +274,14 @@
           <p>Add element to existing div: Shift + A</p>\
           <p>Choose element to make resizable: Shift + R</p>\
           <p>Modify existing class: Shift + M</p>\
-          <p>Undo last change: Shift + X</p>\
+          <p>Undo last change: Shift + Z</p>\
         </div>\
         <div class="modal-footer">\
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
         </div>\
       </div>  \
     ');
-    $('body').append('\
+    $('#ContextlyModalsHolder').append('\
       <!-- Modal -->\
       <div id="wrapElementModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
         <div class="modal-header">\
@@ -290,7 +296,7 @@
         </div>\
       </div>  \
     ');
-    $('body').append('\
+    $('#ContextlyModalsHolder').append('\
     <!-- Modal -->\
     <div id="makeClassDraggable" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
       <div class="modal-header">\
@@ -305,7 +311,7 @@
       </div>\
     </div>  \
   ');
-    $('body').append('\
+    $('#ContextlyModalsHolder').append('\
       <!-- Modal -->\
       <div id="changeTagNameModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
         <div class="modal-header">\
@@ -320,7 +326,7 @@
         </div>\
       </div>  \
     ');
-    $('body').append('\
+    $('#ContextlyModalsHolder').append('\
       <!-- Modal -->\
       <div id="addElementToDivModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
         <div class="modal-header">\
@@ -335,7 +341,7 @@
         </div>\
       </div>  \
     ');
-    $('body').append('\
+    $('#ContextlyModalsHolder').append('\
       <!-- Modal -->\
       <div id="resizableModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
         <div class="modal-header">\
@@ -350,7 +356,7 @@
         </div>\
       </div>  \
     ');
-    $('body').append('\
+    $('#ContextlyModalsHolder').append('\
       <!-- Modal -->\
       <div id="modifyClassModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
         <div class="modal-header">\
@@ -455,54 +461,21 @@
             parent = details.parent;
             $(element).remove();
             return $(parent).append($(element));
+          } else if (method === "changeFont") {
+            $(element).css("font-size", details.font - size);
+            $(element).css("font-family", details.font - family);
+            return $(element).css("font-color", details.color);
           } else if (method === "draggable" || "classDraggable") {
             return $(element).animate({
               "top": "0px",
               "left": "0px"
             });
-          } else if (method === "changeFont") {
-            return $(element).removeAttr('style');
           }
         } else {
           return $('#failRevertFlash').fadeIn(1500, function() {
             return $(this).fadeOut();
           });
         }
-      }
-    });
-    chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-      var changeClass, changeTag, element, text;
-      if (request.action === "loadBootstrap") {
-        $("head").append("          <link href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css' rel='stylesheet'>        ");
-        $('body').wrap('<div class="container" />');
-      }
-      if (request.action === "changeElement") {
-        element = $('.clicked');
-        changeClass = request.changeClass;
-        if (changeClass === "navbar") {
-          element.wrap('<div class="navbar" />');
-          element.addClass('brand');
-          element.wrap('<div class="navbar-inner" />');
-          $(".navbar-inner").append('<ul class="nav pull-right sortable"></ul>');
-        } else if (changeClass === "nav") {
-          text = element.text();
-          element.remove();
-          $('ul.nav').append("<li><a href='#'>" + text + "</a></li>");
-        } else if (changeClass === "addToHero") {
-          $(".hero-unit").append(element);
-        } else {
-          element.wrap('<div class=' + '"' + changeClass + '"' + ' />');
-        }
-      }
-      if (request.action === "changeTagName") {
-        changeTag = request.changeTag;
-        element = $('.clicked');
-        element.replaceWith(function() {
-          return $("<h2 />").append(element.contents());
-        });
-      }
-      if (request.action === "changeFont") {
-        return changeFont(request.font, request.fontSize, request.color);
       }
     });
     $('body').on('click', "#fontChange", function(e) {

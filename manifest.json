@@ -4,8 +4,7 @@
   "description": "Design the web. Simply.", 
   "version": "0.1", 
   "browser_action": {
-    "default_icon": "icon48.png", 
-    "default_popup": "popup.html"
+    "default_icon": "icon48.png"
   }, 
   "content_scripts": [
     {
@@ -13,11 +12,5 @@
       "css": ["style/bootstrap.min.css", "style/jquery-ui.css"],
       "js": ["js/jquery-1.9.1.min.js", "js/jquery-ui-1.10.2.custom.min.js", "js/bootstrap.js", "contentscript.js"] 
     }
-  ],
-  "background": {
-    "scripts": ["background.js"]
-  },
-  "permissions": [
-    "tabs", "http://localhost:3000/*"
   ]
 }
