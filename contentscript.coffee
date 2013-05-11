@@ -6,6 +6,7 @@
 
 
 # "Classic" linked list implementation that doesn't keep track of its size.
+# Taken from https://github.com/jashkenas/coffee-script/blob/master/examples/computer_science/linked_list.coffee
 class LinkedList
 
   ->
@@ -586,8 +587,6 @@ $(document).ready ->
           # jquery converts right into (-1)left and same for top and down
           $(element).animate({"top": "0px", "left": "0px"})
 
-
-
       else 
         $('#failRevertFlash').fadeIn 1500, ->
           $(this).fadeOut()
@@ -598,7 +597,7 @@ $(document).ready ->
 #############################################################################
 #############################################################################
 
-  ####################### CHANGE FONT ######################################
+# ---------------------------- CHANGE FONT ---------------------------------
   $('body').on 'click', "#fontChange", (e) -> 
      # get font type
     font = $('#font-list').val()
@@ -630,7 +629,7 @@ $(document).ready ->
 
     console.log commandList
 
-  ####################### WRAP ELEMENT ######################################
+# ---------------------------- WRAP ELEMENT ---------------------------------
   $('body').on 'click', "#wrapElement", (e) -> 
     # get element
     classToWrap = $('#wrapElememtArea').val()
@@ -643,7 +642,7 @@ $(document).ready ->
     # add to list of commands done
     commandList.add $('.clicked'), "wrapClass"
 
-  ####################### CHANGE TAGNAME ######################################
+# ---------------------------- CHANGE TAGNAME -------------------------------
   $('body').on 'click', "#changeTagNameSubmit", (e) -> 
 
     # get tagName 
@@ -660,11 +659,11 @@ $(document).ready ->
     $('#changeTagNameFlash').fadeIn 1500, -> 
       $(this).fadeOut()
 
-  ####################### CLOSE FLASH ######################################
+# ---------------------------- CLOSE FLASH ----------------------------------
   $('body').on 'click', '#closeMyFlash', (e) -> 
     $(this).fadeOut()
 
-  ####################### ADD ELEMENT TO DIV ######################################
+# ---------------------------- ADD ELEMENT TO DIV ---------------------------
   $('body').on 'click', '#addElementToDiv', (e) -> 
     # get class val 
     classToAdd = $('#addElementToDivArea').val()
@@ -686,7 +685,7 @@ $(document).ready ->
     $('#addToClassFlash').fadeIn 1500, ->
       $(this).fadeOut()
 
-####################### MAKE RESIZABLE ######################################
+# ---------------------------- MAKE DIV RESIZABLE -----------------------------
   $('body').on 'click', '#makeResizable', (e) -> 
     # make something resizable 
     element = "." + $('#resizableClassArea').val()
@@ -699,7 +698,7 @@ $(document).ready ->
     # add to list of commands done
     commandList.add $('.clicked')
 
-####################### MAKE CLASS DRAGGABLE ####################################
+# ---------------------------- MAKE DIV DRAGGABLE------------------------------
 
   $('body').on 'click', '#makeClassDraggableSubmit', (e) ->
     # make class draggable 
@@ -735,7 +734,7 @@ $(document).ready ->
     # add to list of commands done
     commandList.add $(element), "classDraggable"
 
-####################### MODIFY CLASS ######################################
+# ---------------------------- MODIFY CLASS---------------------------------
   $('body').on 'click', "#modifyClass", (e) -> 
 
     # get variables 
@@ -758,7 +757,7 @@ $(document).ready ->
     $('#modifyClassFlash').fadeIn 1500, ->
       $(this).fadeOut()
 
-####################### GET CLICKED TAGS ######################################
+# ---------------------------- GET CLICKED ELEMENT-----------------------------
   $('body').on "click", "h1, h2, h3, p, a, li, img", (e) -> 
 
     # prevent default
@@ -784,7 +783,7 @@ $(document).ready ->
 
 #############################################################################
 #############################################################################
-############################# METHODS FOR CHANGING THINGS ###################
+############################# METHODS FOR CHANGING THINGIES #################
 #############################################################################
 #############################################################################
 
