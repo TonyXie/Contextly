@@ -323,6 +323,7 @@ $(document).ready ->
           <h3 id="myModalLabel">Help Menu</h3>
         </div>
         <div class="modal-body">
+          <p> Click elements to select them! Contextly only works on localhost or file:/// urls </p>
           <p>Help menu: Shift + H</p>
           <p>Change font-styles: Shift + F</p>
           <p>Wrap element with class: Shift + W</p>
@@ -399,7 +400,7 @@ $(document).ready ->
           <h3 id="myModalLabel">Add Element to Existing Class</h3>
         </div>
         <div class="modal-body">
-          <b style="font-size: 50px">.</b><textarea name="Tony" id="addElementToDivArea" cols="1" rows="1">Choose div to add element to:</textarea>
+          <b style="font-size: 50px">.</b><textarea name="Tony" id="addElementToDivArea" cols="1" rows="1">Choose class to add element to:</textarea>
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -492,7 +493,7 @@ $(document).ready ->
       $('#changeTagNameArea').val(currTagName)
       $("#changeTagNameModal").modal()
 
-    # make class draggable ( shift + D + C)
+    # make class draggable ( shift + E)
     if event.shiftKey and event.which is 69
       $("#makeClassDraggable").modal()
 
@@ -518,8 +519,11 @@ $(document).ready ->
           $(this).tooltip('destroy')
           left = $(this).css('left')
           top = $(this).css('top')
-          $(this).tooltip('title': "left: #{left}, top: #{top}")
-          $(this).tooltip('show')
+
+          $(this).tooltip({ 
+            'trigger': 'manual'
+            'title': "relative-left: #{left}, relative-top: #{top}"
+            }).tooltip('show')
 
           # disable the draggable
           $(this).draggable('disable')
@@ -588,15 +592,21 @@ $(document).ready ->
           console.log details
           $(element).css("font-size", details.fontSize)   
           $(element).css("font-family", details.fontFamily)   
-          $(element).css("font-color", details.color)  
+          $(element).css("color", details.color)  
           $(element).css("font-style", details.fontStyle)   
-          $(element).css("font-weight", details.fontWeight)   
- 
+          $(element).css("font-weight", details.fontWeight)  
+
+        else if method is "resizable"
+          $(element).animate {"height" : "#{details.height}", "width" : "#{details.width}"}
+          $(element).tooltip('destroy') 
 
         else if method is "draggable" or "classDraggable"
           # revert to original position. Only have to change "left" and "top" 
           # jquery converts right into (-1)left and same for top and down
           $(element).animate({"top": "0px", "left": "0px"})
+
+          # remove tooltip 
+          $(element).tooltip('destroy')
 
       else 
         $('#failRevertFlash').fadeIn 1500, ->
@@ -706,14 +716,37 @@ $(document).ready ->
   $('body').on 'click', '#makeResizable', (e) -> 
     # make something resizable 
     element = "." + $('#resizableClassArea').val()
-    $(element).resizable()
+    $(element).resizable {
+      start: -> 
+        # add to list of commands done
+        commandList.add $(element), "resizable", {
+          "height" : $(element).css("height")
+          "width" : $(element).css("width")
+        }
+
+      # append tooltip when stopped 
+      stop: ->
+        height = $(element).css('height')
+        width = $(element).css('width')
+
+        # put height + width tooltip on bottom
+        $(element).tooltip({
+          placement: 'bottom'
+          trigger: 'manual'
+          title: "new height: #{height}, new width: #{width}"
+        }).tooltip('show')
+
+    }
+
+    # append border
+    $(element).css("border-bottom", "3px solid black")
+    $(element).css("border-right", "3px solid black")
 
     # show flash 
     $('#resizableFlash').fadeIn 1500, ->
       $(this).fadeOut()
 
-    # add to list of commands done
-    commandList.add $('.clicked')
+    
 
 # ---------------------------- MAKE DIV DRAGGABLE------------------------------
 
@@ -732,10 +765,14 @@ $(document).ready ->
         stop: -> 
           # some tooltipping action 
           $(this).tooltip('destroy')
+
           left = $(this).css('left')
           top = $(this).css('top')
-          $(this).tooltip('title': "left: #{left}, top: #{top}")
-          $(this).tooltip('show')
+
+          $(this).tooltip({ 
+            'trigger': 'manual'
+            'title': "relative-left: #{left}, relative-top: #{top}"
+            }).tooltip('show')
 
           # disable the draggable
           $(this).draggable('disable')
@@ -784,7 +821,7 @@ $(document).ready ->
     x = $(this)
 
     # remove background and class from previously clicked elements 
-    $('.clicked').css('background', 'none')
+    $('.clicked').css('background-color', '')
     $('.clicked').removeClass('clicked')  
 
     # set background and class to highlight the clicked element

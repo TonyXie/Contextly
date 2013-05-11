@@ -270,6 +270,7 @@
           <h3 id="myModalLabel">Help Menu</h3>\
         </div>\
         <div class="modal-body">\
+          <p> Click elements to select them! Contextly only works on localhost or file:/// urls </p>\
           <p>Help menu: Shift + H</p>\
           <p>Change font-styles: Shift + F</p>\
           <p>Wrap element with class: Shift + W</p>\
@@ -338,7 +339,7 @@
           <h3 id="myModalLabel">Add Element to Existing Class</h3>\
         </div>\
         <div class="modal-body">\
-          <b style="font-size: 50px">.</b><textarea name="Tony" id="addElementToDivArea" cols="1" rows="1">Choose div to add element to:</textarea>\
+          <b style="font-size: 50px">.</b><textarea name="Tony" id="addElementToDivArea" cols="1" rows="1">Choose class to add element to:</textarea>\
         </div>\
         <div class="modal-footer">\
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
@@ -423,9 +424,9 @@
             left = $(this).css('left');
             top = $(this).css('top');
             $(this).tooltip({
-              'title': "left: " + left + ", top: " + top
-            });
-            $(this).tooltip('show');
+              'trigger': 'manual',
+              'title': "relative-left: " + left + ", relative-top: " + top
+            }).tooltip('show');
             return $(this).draggable('disable');
           },
           opacity: 1
@@ -473,14 +474,21 @@
             console.log(details);
             $(element).css("font-size", details.fontSize);
             $(element).css("font-family", details.fontFamily);
-            $(element).css("font-color", details.color);
+            $(element).css("color", details.color);
             $(element).css("font-style", details.fontStyle);
             return $(element).css("font-weight", details.fontWeight);
+          } else if (method === "resizable") {
+            $(element).animate({
+              "height": "" + details.height,
+              "width": "" + details.width
+            });
+            return $(element).tooltip('destroy');
           } else if (method === "draggable" || "classDraggable") {
-            return $(element).animate({
+            $(element).animate({
               "top": "0px",
               "left": "0px"
             });
+            return $(element).tooltip('destroy');
           }
         } else {
           return $('#failRevertFlash').fadeIn(1500, function() {
@@ -552,11 +560,29 @@
     $('body').on('click', '#makeResizable', function(e) {
       var element;
       element = "." + $('#resizableClassArea').val();
-      $(element).resizable();
-      $('#resizableFlash').fadeIn(1500, function() {
+      $(element).resizable({
+        start: function() {
+          return commandList.add($(element), "resizable", {
+            "height": $(element).css("height"),
+            "width": $(element).css("width")
+          });
+        },
+        stop: function() {
+          var height, width;
+          height = $(element).css('height');
+          width = $(element).css('width');
+          return $(element).tooltip({
+            placement: 'bottom',
+            trigger: 'manual',
+            title: "new height: " + height + ", new width: " + width
+          }).tooltip('show');
+        }
+      });
+      $(element).css("border-bottom", "3px solid black");
+      $(element).css("border-right", "3px solid black");
+      return $('#resizableFlash').fadeIn(1500, function() {
         return $(this).fadeOut();
       });
-      return commandList.add($('.clicked'));
     });
     $('body').on('click', '#makeClassDraggableSubmit', function(e) {
       var element;
@@ -570,9 +596,9 @@
           left = $(this).css('left');
           top = $(this).css('top');
           $(this).tooltip({
-            'title': "left: " + left + ", top: " + top
-          });
-          $(this).tooltip('show');
+            'trigger': 'manual',
+            'title': "relative-left: " + left + ", relative-top: " + top
+          }).tooltip('show');
           return $(this).draggable('disable');
         },
         opacity: 1
@@ -604,7 +630,7 @@
       var x;
       e.preventDefault();
       x = $(this);
-      $('.clicked').css('background', 'none');
+      $('.clicked').css('background-color', '');
       $('.clicked').removeClass('clicked');
       x.addClass('clicked');
       x.css('background', 'rgb(255, 251, 204)');
