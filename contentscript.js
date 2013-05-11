@@ -231,6 +231,7 @@
         </div>\
         <div class="modal-body">\
           <select name="font-list" id="font-list">\
+            <option value="Helvetica">Helvetica</option>\
             <option value="Raleway">Raleway</option>\
             <option value="Gabriela"> Gabriela </option>\
             <option value="Abril+Fatface">Abril Fatface</option>\
@@ -240,14 +241,18 @@
             <option value="Merriweather">Merriweather</option>\
             <option value="Old+Standard+TT">Old Standard TT</option>\
             <option value="Open+Sans">Open Sans</option>\
+            <option value="Oswald">Oswald</option>\
             <option value="Playfair+Display">Playfair Display</option>\
             <option value="PT+Sans">PT Sans</option>\
+            <option value="PT+Mono">PT Mono</option>\
             <option value="PT+Sans+Narrow">PT Sans Narrow</option>\
             <option value="PT+Serif">PT Serif</option>\
             <option value="Vollkorn">Vollkorn</option>\
             <option value="Abel">Abel</option>\
           </select>\
         <textarea name="Tony" id="changeFontSize" style="width: 280px"cols="1" rows="1">Current font size:</textarea>\
+        <textarea name="Tony" id="changeFontStyle" style="width: 280px"cols="1" rows="1">Current font-style:</textarea>\
+        <textarea name="Tony" id="changeFontWeight" style="width: 280px"cols="1" rows="1">Current font-weight:</textarea>\
         <b style="font-size: 20px">R</b><input style="width: 50px" id="fontColorR">\
         <b style="font-size: 20px">G</b><input style="width: 50px" id="fontColorG">\
         <b style="font-size: 20px">B</b><input style="width: 50px" id="fontColorB">\
@@ -376,12 +381,16 @@
     ');
     modalDown = false;
     $(document).bind('keypress', function(e) {
-      var action, classToAdd, color, content, currFontSize, currTagName, details, element, index, method, parent, tagName;
+      var action, classToAdd, color, content, currFontSize, currTagName, details, element, fontStyle, fontWeight, index, method, parent, tagName;
       if (event.shiftKey && event.which === 72) {
         modalDown = true;
         $("#helpModal").modal();
       }
       if (event.shiftKey && event.which === 70) {
+        fontStyle = $('.clicked').css('font-style');
+        fontWeight = $('.clicked').css('font-weight');
+        $('#changeFontStyle').val(fontStyle);
+        $('#changeFontWeight').val(fontWeight);
         color = $('.clicked').css("color");
         $('#fontColorR').val(color.substring(4, 6));
         $('#fontColorG').val(color.substring(8, 10));
@@ -438,7 +447,6 @@
           $('#revertFlash').fadeIn(1500, function() {
             return $(this).fadeOut();
           });
-          console.log(commandList);
           action = commandList.pop();
           element = action.element;
           method = action.method;
@@ -462,9 +470,12 @@
             $(element).remove();
             return $(parent).append($(element));
           } else if (method === "changeFont") {
-            $(element).css("font-size", details.font - size);
-            $(element).css("font-family", details.font - family);
-            return $(element).css("font-color", details.color);
+            console.log(details);
+            $(element).css("font-size", details.fontSize);
+            $(element).css("font-family", details.fontFamily);
+            $(element).css("font-color", details.color);
+            $(element).css("font-style", details.fontStyle);
+            return $(element).css("font-weight", details.fontWeight);
           } else if (method === "draggable" || "classDraggable") {
             return $(element).animate({
               "top": "0px",
@@ -479,19 +490,23 @@
       }
     });
     $('body').on('click', "#fontChange", function(e) {
-      var color, colorB, colorG, colorR, font, fontSize;
+      var color, colorB, colorG, colorR, font, fontSize, fontStyle, fontWeight;
       font = $('#font-list').val();
-      fontSize = $("#changeFontSize").val();
+      fontSize = $('#changeFontSize').val();
+      fontStyle = $('#changeFontStyle').val();
+      fontWeight = $('#changeFontWeight').val();
       colorR = $("#fontColorR").val();
       colorG = $("#fontColorG").val();
       colorB = $("#fontColorB").val();
       color = "rgb(" + colorR + ", " + colorG + ", " + colorB + ")";
       commandList.add($('.clicked'), "changeFont", {
-        "font-family": $('.clicked').css("font-family"),
-        "font-size": $('.clicked').css("font-size"),
+        "fontFamily": $('.clicked').css("font-family"),
+        "fontSize": $('.clicked').css("font-size"),
+        "fontStyle": $('.clicked').css("font-style"),
+        "fontWeight": $('.clicked').css('font-weight'),
         "color": $('.clicked').css("color")
       });
-      changeFont(font, fontSize, color);
+      changeFont(font, fontSize, color, fontStyle, fontWeight);
       $("#changeFontFlash").fadeIn(1500, function() {
         return $(this).fadeOut();
       });
@@ -600,17 +615,21 @@
     });
   });
 
-  changeFont = function(font, fontSize, color) {
+  changeFont = function(font, fontSize, color, fontStyle, fontWeight) {
     var element;
     font = font;
     element = $('.clicked');
     fontSize = fontSize;
     color = color;
-    $("head").append("    <link href='http://fonts.googleapis.com/css?family=" + font + "' rel='stylesheet' type='text/css'>    ");
-    font = font.split("+").join(" ");
+    if (font !== "Helvetica") {
+      $("head").append("      <link href='http://fonts.googleapis.com/css?family=" + font + "' rel='stylesheet' type='text/css'>      ");
+      font = font.split("+").join(" ");
+    }
     element.css('font-family', font);
     element.css('font-size', fontSize);
-    return element.css('color', color);
+    element.css('color', color);
+    element.css('font-style', fontStyle);
+    return element.css('font-weight', fontWeight);
   };
 
   wrapElement = function(wrapElement) {

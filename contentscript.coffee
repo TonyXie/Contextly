@@ -4,7 +4,6 @@
 #############################################################################
 #############################################################################
 
-
 # "Classic" linked list implementation that doesn't keep track of its size.
 # Taken from https://github.com/jashkenas/coffee-script/blob/master/examples/computer_science/linked_list.coffee
 class LinkedList
@@ -283,6 +282,7 @@ $(document).ready ->
         </div>
         <div class="modal-body">
           <select name="font-list" id="font-list">
+            <option value="Helvetica">Helvetica</option>
             <option value="Raleway">Raleway</option>
             <option value="Gabriela"> Gabriela </option>
             <option value="Abril+Fatface">Abril Fatface</option>
@@ -292,14 +292,18 @@ $(document).ready ->
             <option value="Merriweather">Merriweather</option>
             <option value="Old+Standard+TT">Old Standard TT</option>
             <option value="Open+Sans">Open Sans</option>
+            <option value="Oswald">Oswald</option>
             <option value="Playfair+Display">Playfair Display</option>
             <option value="PT+Sans">PT Sans</option>
+            <option value="PT+Mono">PT Mono</option>
             <option value="PT+Sans+Narrow">PT Sans Narrow</option>
             <option value="PT+Serif">PT Serif</option>
             <option value="Vollkorn">Vollkorn</option>
             <option value="Abel">Abel</option>
           </select>
         <textarea name="Tony" id="changeFontSize" style="width: 280px"cols="1" rows="1">Current font size:</textarea>
+        <textarea name="Tony" id="changeFontStyle" style="width: 280px"cols="1" rows="1">Current font-style:</textarea>
+        <textarea name="Tony" id="changeFontWeight" style="width: 280px"cols="1" rows="1">Current font-weight:</textarea>
         <b style="font-size: 20px">R</b><input style="width: 50px" id="fontColorR">
         <b style="font-size: 20px">G</b><input style="width: 50px" id="fontColorG">
         <b style="font-size: 20px">B</b><input style="width: 50px" id="fontColorB">
@@ -460,6 +464,12 @@ $(document).ready ->
      # change font specifications ( shift + F )
     if event.shiftKey and event.which is 70 
 
+      # replace fontStyle and fontWeight vals with current ones of clicked element
+      fontStyle = $('.clicked').css('font-style')
+      fontWeight = $('.clicked').css('font-weight')
+      $('#changeFontStyle').val(fontStyle)
+      $('#changeFontWeight').val(fontWeight)
+
       # replace clicked color vals into modal
       color = $('.clicked').css("color")
       $('#fontColorR').val(color.substring(4,6))
@@ -542,8 +552,6 @@ $(document).ready ->
         $('#revertFlash').fadeIn 1500, -> 
           $(this).fadeOut()
 
-        console.log commandList
-
         # get last element in list
         action = commandList.pop()
         element = action.element
@@ -577,10 +585,13 @@ $(document).ready ->
           $(parent).append( $(element) )
 
         else if method is "changeFont"
-          $(element).css("font-size", details.font-size)   
-          $(element).css("font-family", details.font-family)   
-          $(element).css("font-color", details.color)   
-
+          console.log details
+          $(element).css("font-size", details.fontSize)   
+          $(element).css("font-family", details.fontFamily)   
+          $(element).css("font-color", details.color)  
+          $(element).css("font-style", details.fontStyle)   
+          $(element).css("font-weight", details.fontWeight)   
+ 
 
         else if method is "draggable" or "classDraggable"
           # revert to original position. Only have to change "left" and "top" 
@@ -603,7 +614,13 @@ $(document).ready ->
     font = $('#font-list').val()
 
     # get font size
-    fontSize = $("#changeFontSize").val()
+    fontSize = $('#changeFontSize').val()
+
+    # get font-style 
+    fontStyle = $('#changeFontStyle').val()
+
+    # get font-weight 
+    fontWeight = $('#changeFontWeight').val()
 
     # get color 
     colorR = $("#fontColorR").val()
@@ -613,19 +630,19 @@ $(document).ready ->
 
     # add to list of commands done
     commandList.add $('.clicked'), "changeFont", {
-      "font-family": $('.clicked').css("font-family")
-      "font-size" : $('.clicked').css("font-size")
+      "fontFamily": $('.clicked').css("font-family")
+      "fontSize" : $('.clicked').css("font-size")
+      "fontStyle" : $('.clicked').css("font-style")
+      "fontWeight" : $('.clicked').css('font-weight')
       "color" : $('.clicked').css("color")
     }
 
     # call changeFont
-    changeFont(font, fontSize, color)
+    changeFont(font, fontSize, color, fontStyle, fontWeight)
 
     # show flash 
     $("#changeFontFlash").fadeIn 1500, -> 
       $(this).fadeOut()
-
-
 
     console.log commandList
 
@@ -787,21 +804,24 @@ $(document).ready ->
 #############################################################################
 #############################################################################
 
-# method for changing the font 
-changeFont = (font, fontSize, color) -> 
+# method for changing the font
+changeFont = (font, fontSize, color, fontStyle, fontWeight) -> 
   # set local variables
   font = font 
   element = $('.clicked')
   fontSize= fontSize
   color = color
 
-  # get css stylesheet from googlefonts
-  $("head").append("
-    <link href='http://fonts.googleapis.com/css?family=" + font + "' rel='stylesheet' type='text/css'>
-    ");
+  # if font is google web font 
+  unless font is "Helvetica"
 
-  # some magicking to get right font-name 
-  font = font.split("+").join(" ")
+    # get css stylesheet from googlefonts
+    $("head").append("
+      <link href='http://fonts.googleapis.com/css?family=" + font + "' rel='stylesheet' type='text/css'>
+      ");
+
+    # some magicking to get right font-name 
+    font = font.split("+").join(" ")
 
   # change css of element
   element.css('font-family', font)
@@ -811,6 +831,11 @@ changeFont = (font, fontSize, color) ->
 
   # change color
   element.css('color', color)
+
+  # change style and weight
+  element.css('font-style', fontStyle)
+  element.css('font-weight', fontWeight)
+
 
 # method for wrapping elements in classes 
 wrapElement = (wrapElement) -> 

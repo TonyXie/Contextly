@@ -2,18 +2,16 @@
   "manifest_version": 2, 
   "name": "Contextly", 
   "description": "Design the web. Simply.", 
-  "version": "0.1", 
+  "version": "1.3", 
   "icons" : {
     "48" : "icon48.png"
   },
-  "browser_action": {
-    "default_icon": "icon48.png"
-  }, 
   "content_scripts": [
     {
-      "matches": ["http://localhost:*/*", "file:///*"],
-      "css": ["style/bootstrap.min.css", "style/jquery-ui.css"],
-      "js": ["js/jquery-1.9.1.min.js", "js/jquery-ui-1.10.2.custom.min.js", "js/bootstrap.js", "contentscript.js"] 
+      "matches": ["http://localhost/*", "file:///*"],
+      "css": ["bootstrap.min.css", "jquery-ui.css"],
+      "js": ["jquery-1.9.1.min.js", "jquery-ui-1.10.2.custom.min.js", "bootstrap.js", "contentscript.js"] 
     }
   ]
 }
+
