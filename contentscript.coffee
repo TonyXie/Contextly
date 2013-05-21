@@ -27,6 +27,18 @@ class LinkedList
 
     this
 
+  # Updates the element detail of all nodes. Mainly for undoing tagName changes later on. 
+  updateAllElement: (element, newEle) ->
+
+    current = this._head 
+
+    while current isnt null 
+
+      # check if current.element = element
+      if current.element is element
+        current.element = newEle
+
+      current = current.next
 
   # Retrieves the data at the given position in the list.
   item: (index) ->
@@ -45,6 +57,7 @@ class LinkedList
 
   # Return the last item in the list and remove it 
   pop: -> 
+
     current = this._head
 
     # go through the list until we reach null
@@ -522,7 +535,7 @@ $(document).ready ->
 
           $(this).tooltip({ 
             'trigger': 'manual'
-            'title': "relative-left: #{left}, relative-top: #{top}"
+            'title': "left-change: #{left}, top-change: #{top}"
             }).tooltip('show')
 
           # disable the draggable
@@ -534,7 +547,6 @@ $(document).ready ->
 
       # add it to the list of commands done
       commandList.add $('.clicked'), 'draggable'
-      console.log commandList
 
     # method for adding element to a class ( shift + A )
     if event.shiftKey and event.which is 65
@@ -549,7 +561,7 @@ $(document).ready ->
       $("#modifyClassModal").modal()
 
     # revert change ( shift + Z)
-    if event.shiftKey and event.which is 90 
+    if event.shiftKey and event.which is 90
 
       # show flash
       if commandList.size() > 0
@@ -567,7 +579,7 @@ $(document).ready ->
           content = $('.changeTagNameTarget').text()
 
           $('.changeTagNameTarget').replaceWith -> 
-            $("<#{tagName} />").append content
+            $("<#{tagName} class = 'changeTagNameTarget'></#{tagName}>").append content
 
         else if method is "modifyClass"
           $(element).css('background', details.background)
@@ -582,14 +594,15 @@ $(document).ready ->
           index  = details.index
           parent = details.parent
 
+          classToAddLastChild = "#{classToAdd}:last-child"
+
           # remove element from div
-          $(element).remove()
+          $(classToAddLastChild).remove()
 
           # insert element back to original spot by index
           $(parent).append( $(element) )
 
         else if method is "changeFont"
-          console.log details
           $(element).css("font-size", details.fontSize)   
           $(element).css("font-family", details.fontFamily)   
           $(element).css("color", details.color)  
@@ -653,8 +666,6 @@ $(document).ready ->
     # show flash 
     $("#changeFontFlash").fadeIn 1500, -> 
       $(this).fadeOut()
-
-    console.log commandList
 
 # ---------------------------- WRAP ELEMENT ---------------------------------
   $('body').on 'click', "#wrapElement", (e) -> 
@@ -771,7 +782,7 @@ $(document).ready ->
 
           $(this).tooltip({ 
             'trigger': 'manual'
-            'title': "relative-left: #{left}, relative-top: #{top}"
+            'title': "left-change: #{left}, top-change: #{top}"
             }).tooltip('show')
 
           # disable the draggable
@@ -828,13 +839,6 @@ $(document).ready ->
     x.addClass('clicked')
     x.css('background', 'rgb(255, 251, 204)')
 
-    chrome.extension.sendMessage {
-      # send information to background page
-      "tagName": x.prop("tagName").toLowerCase()
-      "fontSize": x.css("font-size")
-    }
-
-
 #############################################################################
 #############################################################################
 ############################# METHODS FOR CHANGING THINGIES #################
@@ -881,10 +885,23 @@ wrapElement = (wrapElement) ->
 # method for changing the tagName of an element 
 changeTagName  = (tagName) -> 
   if tagName?
+    element = $('.clicked')
+    color = $(element).css('color')
+    fontFamily = $(element).css('font-family')
+
+    # change tagName
     $('.clicked').replaceWith -> 
       $("<#{tagName} class = 'changeTagNameTarget'></#{tagName}>").append $('.clicked').contents()
-      
 
+    # keep the rest of the old element's style
+    target = $('.changeTagNameTarget')
+    $(target).css('color', color)
+    $(target).css('font-family', fontFamily)
+
+    # update the old commandList so when we are undoing changes it knows to take the fact that 
+    # the node was replaced into account
+
+    commandList.updateAllElement element, $('.changeTagNameTarget')
 
 # method for adding element to existing div 
 addElementToDiv = (classToAdd) -> 

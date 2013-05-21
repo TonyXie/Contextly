@@ -28,6 +28,19 @@
       return this;
     };
 
+    LinkedList.prototype.updateAllElement = function(element, newEle) {
+      var current, _results;
+      current = this._head;
+      _results = [];
+      while (current !== null) {
+        if (current.element === element) {
+          current.element = newEle;
+        }
+        _results.push(current = current.next);
+      }
+      return _results;
+    };
+
     LinkedList.prototype.item = function(index) {
       var current, i;
       if (index < 0) {
@@ -382,7 +395,7 @@
     ');
     modalDown = false;
     $(document).bind('keypress', function(e) {
-      var action, classToAdd, color, content, currFontSize, currTagName, details, element, fontStyle, fontWeight, index, method, parent, tagName;
+      var action, classToAdd, classToAddLastChild, color, content, currFontSize, currTagName, details, element, fontStyle, fontWeight, index, method, parent, tagName;
       if (event.shiftKey && event.which === 72) {
         modalDown = true;
         $("#helpModal").modal();
@@ -425,14 +438,13 @@
             top = $(this).css('top');
             $(this).tooltip({
               'trigger': 'manual',
-              'title': "relative-left: " + left + ", relative-top: " + top
+              'title': "left-change: " + left + ", top-change: " + top
             }).tooltip('show');
             return $(this).draggable('disable');
           },
           opacity: 1
         });
         commandList.add($('.clicked'), 'draggable');
-        console.log(commandList);
       }
       if (event.shiftKey && event.which === 65) {
         $('#addElementToDivModal').modal();
@@ -456,7 +468,7 @@
             tagName = details.tagName;
             content = $('.changeTagNameTarget').text();
             return $('.changeTagNameTarget').replaceWith(function() {
-              return $("<" + tagName + " />").append(content);
+              return $("<" + tagName + " class = 'changeTagNameTarget'></" + tagName + ">").append(content);
             });
           } else if (method === "modifyClass") {
             $(element).css('background', details.background);
@@ -468,10 +480,10 @@
             classToAdd = "." + details.classToAdd;
             index = details.index;
             parent = details.parent;
-            $(element).remove();
+            classToAddLastChild = "" + classToAdd + ":last-child";
+            $(classToAddLastChild).remove();
             return $(parent).append($(element));
           } else if (method === "changeFont") {
-            console.log(details);
             $(element).css("font-size", details.fontSize);
             $(element).css("font-family", details.fontFamily);
             $(element).css("color", details.color);
@@ -515,10 +527,9 @@
         "color": $('.clicked').css("color")
       });
       changeFont(font, fontSize, color, fontStyle, fontWeight);
-      $("#changeFontFlash").fadeIn(1500, function() {
+      return $("#changeFontFlash").fadeIn(1500, function() {
         return $(this).fadeOut();
       });
-      return console.log(commandList);
     });
     $('body').on('click', "#wrapElement", function(e) {
       var classToWrap;
@@ -597,7 +608,7 @@
           top = $(this).css('top');
           $(this).tooltip({
             'trigger': 'manual',
-            'title': "relative-left: " + left + ", relative-top: " + top
+            'title': "left-change: " + left + ", top-change: " + top
           }).tooltip('show');
           return $(this).draggable('disable');
         },
@@ -633,11 +644,7 @@
       $('.clicked').css('background-color', '');
       $('.clicked').removeClass('clicked');
       x.addClass('clicked');
-      x.css('background', 'rgb(255, 251, 204)');
-      return chrome.extension.sendMessage({
-        "tagName": x.prop("tagName").toLowerCase(),
-        "fontSize": x.css("font-size")
-      });
+      return x.css('background', 'rgb(255, 251, 204)');
     });
   });
 
@@ -663,10 +670,18 @@
   };
 
   changeTagName = function(tagName) {
+    var color, element, fontFamily, target;
     if (tagName != null) {
-      return $('.clicked').replaceWith(function() {
+      element = $('.clicked');
+      color = $(element).css('color');
+      fontFamily = $(element).css('font-family');
+      $('.clicked').replaceWith(function() {
         return $("<" + tagName + " class = 'changeTagNameTarget'></" + tagName + ">").append($('.clicked').contents());
       });
+      target = $('.changeTagNameTarget');
+      $(target).css('color', color);
+      $(target).css('font-family', fontFamily);
+      return commandList.updateAllElement(element, $('.changeTagNameTarget'));
     }
   };
 
