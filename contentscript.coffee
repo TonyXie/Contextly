@@ -380,6 +380,7 @@ $(document).ready ->
       </div>
       <div class="modal-body">
         <b style="font-size: 50px">.</b><textarea name="Tony" id="draggableClassArea" cols="1" rows="1">Make class draggable:</textarea>
+        <b style="font-size: 30px">#</b><textarea name="Tony" id="draggableIdArea" cols="1" rows="1">Choose id to add element to:</textarea>
       </div>
       <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -410,10 +411,11 @@ $(document).ready ->
       <!-- Modal -->
       <div id="addElementToDivModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
-          <h3 id="myModalLabel">Add Element to Existing Class</h3>
+          <h3 id="myModalLabel">Add Element to Existing Div</h3>
         </div>
         <div class="modal-body">
           <b style="font-size: 50px">.</b><textarea name="Tony" id="addElementToDivArea" cols="1" rows="1">Choose class to add element to:</textarea>
+          <b style="font-size: 30px">#</b><textarea name="Tony" id="addElementToIdArea" cols="1" rows="1">Choose id to add element to:</textarea>
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -427,10 +429,11 @@ $(document).ready ->
       <!-- Modal -->
       <div id="resizableModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
-          <h3 id="myModalLabel">Make Class resizable</h3>
+          <h3 id="myModalLabel">Make Div Resizable</h3>
         </div>
         <div class="modal-body">
           <b style="font-size: 50px">.</b><textarea name="Tony" id="resizableClassArea" cols="1" rows="1">Choose class to make resizable:</textarea>
+          <b style="font-size: 30px">#</b><textarea name="Tony" id="resizableIdDivArea" cols="1" rows="1">Choose id to add element to:</textarea>
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -439,7 +442,7 @@ $(document).ready ->
       </div>  
     ')
 
-  # change class thingies modal
+  # change class css attributes modal
   $('#ContextlyModalsHolder').append('
       <!-- Modal -->
       <div id="modifyClassModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -472,7 +475,6 @@ $(document).ready ->
 
     # Display help menu
     if event.shiftKey and event.which is 72
-      modalDown = true
       $("#helpModal").modal()
 
      # change font specifications ( shift + F )
@@ -590,7 +592,7 @@ $(document).ready ->
           $(element).unwrap()
 
         else if method is "addElementToDiv"
-          classToAdd = ".#{details.classToAdd}"
+          classToAdd = details.classToAdd
           index  = details.index
           parent = details.parent
 
@@ -703,13 +705,21 @@ $(document).ready ->
 
 # ---------------------------- ADD ELEMENT TO DIV ---------------------------
   $('body').on 'click', '#addElementToDiv', (e) -> 
-    # get class val 
+    # get class and id val 
     classToAdd = $('#addElementToDivArea').val()
+    IdToAdd = $('#addElementToIdArea').val()
 
+    # choose class or id 
+    unless classToAdd is "Choose class to add element to:"
+      myClass = "." + classToAdd
+    else 
+      myClass = "#" + IdToAdd
+
+    # get parent class
     parent = $('.clicked').parent()
 
     commandList.add $('.clicked'), 'addElementToDiv', {
-      "classToAdd": classToAdd
+      "classToAdd": myClass
 
       # get the index of the element in the dom
       "index": $('*').index( $('.clicked') )
@@ -717,7 +727,12 @@ $(document).ready ->
       # get parent 
       "parent": parent
     }
-    addElementToDiv classToAdd
+
+    # replace default value
+    $('#addElementToDivArea').val("Choose class to add element to:") 
+    $('#addElementToIdArea').val("Choose id to add element to:") 
+
+    addElementToDiv myClass
 
     # show flash 
     $('#addToClassFlash').fadeIn 1500, ->
@@ -726,22 +741,37 @@ $(document).ready ->
 # ---------------------------- MAKE DIV RESIZABLE -----------------------------
   $('body').on 'click', '#makeResizable', (e) -> 
     # make something resizable 
-    element = "." + $('#resizableClassArea').val()
-    $(element).resizable {
+    classElement = $('#resizableClassArea').val()
+    idElement = $('#resizableIdDivArea').val()
+
+    unless classElement is "Choose class to make resizable:"
+      myResizableClass = "." + classElement
+
+      # restore defaults
+      $('#resizableClassArea').val("Choose class to make resizable:")
+    else 
+      myResizableClass = "#" + idElement
+      $('#resizableIdDivArea').val("Choose id to add element to:")
+
+    # class resizable on class
+    $(myResizableClass).resizable {
       start: -> 
         # add to list of commands done
-        commandList.add $(element), "resizable", {
-          "height" : $(element).css("height")
-          "width" : $(element).css("width")
+        commandList.add $(myResizableClass), "resizable", {
+          "height" : $(myResizableClass).css("height")
+          "width" : $(myResizableClass).css("width")
         }
 
       # append tooltip when stopped 
       stop: ->
-        height = $(element).css('height')
-        width = $(element).css('width')
+        # some tooltipping action 
+        $(this).tooltip('destroy')
+
+        height = $(myResizableClass).css('height')
+        width = $(myResizableClass).css('width')
 
         # put height + width tooltip on bottom
-        $(element).tooltip({
+        $(myResizableClass).tooltip({
           placement: 'bottom'
           trigger: 'manual'
           title: "new height: #{height}, new width: #{width}"
@@ -750,8 +780,8 @@ $(document).ready ->
     }
 
     # append border
-    $(element).css("border-bottom", "3px solid black")
-    $(element).css("border-right", "3px solid black")
+    $(myResizableClass).css("border-bottom", "3px solid black")
+    $(myResizableClass).css("border-right", "3px solid black")
 
     # show flash 
     $('#resizableFlash').fadeIn 1500, ->
@@ -763,8 +793,21 @@ $(document).ready ->
 
   $('body').on 'click', '#makeClassDraggableSubmit', (e) ->
     # make class draggable 
-    element = "." + $('#draggableClassArea').val()
-    $(element).draggable({
+    classElement = $('#draggableClassArea').val()
+    idElement = $('#draggableIdArea').val()
+
+    # check whether to use class or id
+    unless classElement is "Make class draggable:"
+      myClass = "." + classElement
+
+      # restore default
+      $('#draggableClassArea').val("Make class draggable:")
+    else 
+      myClass = "#" + idElement
+      $('#draggableIdArea').val("Choose id to add element to:")
+
+    # make div draggable
+    $(myClass).draggable({
 
         # constrain dragged element to 20 x 20 grid
         grid: [20,20], 
@@ -797,7 +840,7 @@ $(document).ready ->
       $(this).fadeOut()
 
     # add to list of commands done
-    commandList.add $(element), "classDraggable"
+    commandList.add $(myClass), "classDraggable"
 
 # ---------------------------- MODIFY CLASS---------------------------------
   $('body').on 'click', "#modifyClass", (e) -> 
@@ -906,8 +949,5 @@ changeTagName  = (tagName) ->
 # method for adding element to existing div 
 addElementToDiv = (classToAdd) -> 
   if classToAdd? 
-
-    # change from "hero-unit" to ".hero-unit"
-    classToAdd = ".#{classToAdd}"
     element = $('.clicked')
     $(classToAdd).append(element)

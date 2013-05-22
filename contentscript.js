@@ -323,6 +323,7 @@
       </div>\
       <div class="modal-body">\
         <b style="font-size: 50px">.</b><textarea name="Tony" id="draggableClassArea" cols="1" rows="1">Make class draggable:</textarea>\
+        <b style="font-size: 30px">#</b><textarea name="Tony" id="draggableIdArea" cols="1" rows="1">Choose id to add element to:</textarea>\
       </div>\
       <div class="modal-footer">\
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
@@ -349,10 +350,11 @@
       <!-- Modal -->\
       <div id="addElementToDivModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
         <div class="modal-header">\
-          <h3 id="myModalLabel">Add Element to Existing Class</h3>\
+          <h3 id="myModalLabel">Add Element to Existing Div</h3>\
         </div>\
         <div class="modal-body">\
           <b style="font-size: 50px">.</b><textarea name="Tony" id="addElementToDivArea" cols="1" rows="1">Choose class to add element to:</textarea>\
+          <b style="font-size: 30px">#</b><textarea name="Tony" id="addElementToIdArea" cols="1" rows="1">Choose id to add element to:</textarea>\
         </div>\
         <div class="modal-footer">\
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
@@ -364,10 +366,11 @@
       <!-- Modal -->\
       <div id="resizableModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\
         <div class="modal-header">\
-          <h3 id="myModalLabel">Make Class resizable</h3>\
+          <h3 id="myModalLabel">Make Div Resizable</h3>\
         </div>\
         <div class="modal-body">\
           <b style="font-size: 50px">.</b><textarea name="Tony" id="resizableClassArea" cols="1" rows="1">Choose class to make resizable:</textarea>\
+          <b style="font-size: 30px">#</b><textarea name="Tony" id="resizableIdDivArea" cols="1" rows="1">Choose id to add element to:</textarea>\
         </div>\
         <div class="modal-footer">\
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
@@ -397,7 +400,6 @@
     $(document).bind('keypress', function(e) {
       var action, classToAdd, classToAddLastChild, color, content, currFontSize, currTagName, details, element, fontStyle, fontWeight, index, method, parent, tagName;
       if (event.shiftKey && event.which === 72) {
-        modalDown = true;
         $("#helpModal").modal();
       }
       if (event.shiftKey && event.which === 70) {
@@ -477,7 +479,7 @@
           } else if (method === "wrapClass") {
             return $(element).unwrap();
           } else if (method === "addElementToDiv") {
-            classToAdd = "." + details.classToAdd;
+            classToAdd = details.classToAdd;
             index = details.index;
             parent = details.parent;
             classToAddLastChild = "" + classToAdd + ":last-child";
@@ -555,50 +557,75 @@
       return $(this).fadeOut();
     });
     $('body').on('click', '#addElementToDiv', function(e) {
-      var classToAdd, parent;
+      var IdToAdd, classToAdd, myClass, parent;
       classToAdd = $('#addElementToDivArea').val();
+      IdToAdd = $('#addElementToIdArea').val();
+      if (classToAdd !== "Choose class to add element to:") {
+        myClass = "." + classToAdd;
+      } else {
+        myClass = "#" + IdToAdd;
+      }
       parent = $('.clicked').parent();
       commandList.add($('.clicked'), 'addElementToDiv', {
-        "classToAdd": classToAdd,
+        "classToAdd": myClass,
         "index": $('*').index($('.clicked')),
         "parent": parent
       });
-      addElementToDiv(classToAdd);
+      $('#addElementToDivArea').val("Choose class to add element to:");
+      $('#addElementToIdArea').val("Choose id to add element to:");
+      addElementToDiv(myClass);
       return $('#addToClassFlash').fadeIn(1500, function() {
         return $(this).fadeOut();
       });
     });
     $('body').on('click', '#makeResizable', function(e) {
-      var element;
-      element = "." + $('#resizableClassArea').val();
-      $(element).resizable({
+      var classElement, idElement, myResizableClass;
+      classElement = $('#resizableClassArea').val();
+      idElement = $('#resizableIdDivArea').val();
+      if (classElement !== "Choose class to make resizable:") {
+        myResizableClass = "." + classElement;
+        $('#resizableClassArea').val("Choose class to make resizable:");
+      } else {
+        myResizableClass = "#" + idElement;
+        $('#resizableIdDivArea').val("Choose id to add element to:");
+      }
+      $(myResizableClass).resizable({
         start: function() {
-          return commandList.add($(element), "resizable", {
-            "height": $(element).css("height"),
-            "width": $(element).css("width")
+          return commandList.add($(myResizableClass), "resizable", {
+            "height": $(myResizableClass).css("height"),
+            "width": $(myResizableClass).css("width")
           });
         },
         stop: function() {
           var height, width;
-          height = $(element).css('height');
-          width = $(element).css('width');
-          return $(element).tooltip({
+          $(this).tooltip('destroy');
+          height = $(myResizableClass).css('height');
+          width = $(myResizableClass).css('width');
+          return $(myResizableClass).tooltip({
             placement: 'bottom',
             trigger: 'manual',
             title: "new height: " + height + ", new width: " + width
           }).tooltip('show');
         }
       });
-      $(element).css("border-bottom", "3px solid black");
-      $(element).css("border-right", "3px solid black");
+      $(myResizableClass).css("border-bottom", "3px solid black");
+      $(myResizableClass).css("border-right", "3px solid black");
       return $('#resizableFlash').fadeIn(1500, function() {
         return $(this).fadeOut();
       });
     });
     $('body').on('click', '#makeClassDraggableSubmit', function(e) {
-      var element;
-      element = "." + $('#draggableClassArea').val();
-      $(element).draggable({
+      var classElement, idElement, myClass;
+      classElement = $('#draggableClassArea').val();
+      idElement = $('#draggableIdArea').val();
+      if (classElement !== "Make class draggable:") {
+        myClass = "." + classElement;
+        $('#draggableClassArea').val("Make class draggable:");
+      } else {
+        myClass = "#" + idElement;
+        $('#draggableIdArea').val("Choose id to add element to:");
+      }
+      $(myClass).draggable({
         grid: [20, 20],
         disabled: false,
         stop: function() {
@@ -617,7 +644,7 @@
       $('#draggableFlash').fadeIn(1500, function() {
         return $(this).fadeOut();
       });
-      return commandList.add($(element), "classDraggable");
+      return commandList.add($(myClass), "classDraggable");
     });
     $('body').on('click', "#modifyClass", function(e) {
       var background, element, height, width;
@@ -688,7 +715,6 @@
   addElementToDiv = function(classToAdd) {
     var element;
     if (classToAdd != null) {
-      classToAdd = "." + classToAdd;
       element = $('.clicked');
       return $(classToAdd).append(element);
     }

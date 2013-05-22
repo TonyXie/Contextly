@@ -9,7 +9,7 @@
   "content_scripts": [
     {
       "matches": ["http://localhost/*", "file:///*"],
-      "css": ["bootstrap.min.css", "jquery-ui.css"],
+      "css": ["jquery-ui.css", "bootstrap.min.css"],
       "js": ["jquery-1.9.1.min.js", "jquery-ui-1.10.2.custom.min.js", "bootstrap.js", "contentscript.js"] 
     }
   ], 
