@@ -121,118 +121,56 @@
   commandList = new LinkedList;
 
   $(document).ready(function() {
-    var modalDown;
+    var allFlashes, flash, flashList, flashTemplate1, flashTemplate2, flashTemplate3, modalDown, _i, _len;
+    flashTemplate1 = "<div id=";
+    flashTemplate2 = " class='hide alert alert-success' style='    z-index: 10000000;    position: fixed;    left: 41%;    top: 2%;    width: 200px;    text-align: center;      '>      <a class='close' id= 'closeMyFlash' href='#'>×</a>";
+    flashTemplate3 = "</div>";
     $('body').append('\
     <div id="ContextlyFlashesHolder"></div>\
     ');
-    $('#ContextlyFlashesHolder').prepend('\
-     <div id="draggableFlash" class="hide alert alert-success" style="\
-    z-index: 10000000;\
-    position: fixed;\
-    left: 41%;\
-    top: 2%;\
-    width: 200px;\
-      ">\
-      <a class="close" id= "closeMyFlash" href="#">×</a>\
-      <p>Element made draggable</p>\
-    </div>\
-    ');
-    $('#ContextlyFlashesHolder').prepend('\
-     <div id="changeFontFlash" class="hide alert alert-success" style="\
-    z-index: 10000000;\
-    position: fixed;\
-    left: 41%;\
-    top: 2%;\
-    width: 200px;\
-      ">\
-      <a class="close" id= "closeMyFlash" href="#">×</a>\
-      <p>Font changed</p>\
-    </div>\
-    ');
-    $('#ContextlyFlashesHolder').prepend('\
-     <div id="wrapClassFlash" class="hide alert alert-success" style="\
-    z-index: 10000000;\
-    position: fixed;\
-    left: 41%;\
-    top: 2%;\
-    width: 230px;\
-      ">\
-      <a class="close" id= "closeMyFlash" href="#">×</a>\
-      <p>Element wrapped in specified div</p>\
-    </div>\
-    ');
-    $('#ContextlyFlashesHolder').prepend('\
-     <div id="addToClassFlash" class="hide alert alert-success" style="\
-    z-index: 10000000;\
-    position: fixed;\
-    left: 41%;\
-    top: 2%;\
-    width: 230px;\
-      ">\
-      <a class="close" id= "closeMyFlash" href="#">×</a>\
-      <p>Element added to specified div</p>\
-    </div>\
-    ');
-    $('#ContextlyFlashesHolder').prepend('\
-     <div id="changeTagNameFlash" class="hide alert alert-success" style="\
-    z-index: 10000000;\
-    position: fixed;\
-    left: 41%;\
-    top: 2%;\
-    width: 200px;\
-      ">\
-      <a class="close" id= "closeMyFlash" href="#">×</a>\
-      <p>Element\'s tagName changed</p>\
-    </div>\
-    ');
-    $('#ContextlyFlashesHolder').prepend('\
-     <div id="modifyClassFlash" class="hide alert alert-success" style="\
-    z-index: 10000000;\
-    position: fixed;\
-    left: 41%;\
-    top: 2%;\
-    width: 200px;\
-      ">\
-      <a class="close" id= "closeMyFlash" href="#">×</a>\
-      <p>Class changed</p>\
-    </div>\
-    ');
-    $('#ContextlyFlashesHolder').prepend('\
-     <div id="resizableFlash" class="hide alert alert-success" style="\
-    z-index: 10000000;\
-    position: fixed;\
-    left: 41%;\
-    top: 2%;\
-    width: 200px;\
-      ">\
-      <a class="close" id= "closeMyFlash" href="#">×</a>\
-      <p>Element made resizable</p>\
-    </div>\
-    ');
-    $('#ContextlyFlashesHolder').prepend('\
-     <div id="revertFlash" class="hide alert alert-success" style="\
-    z-index: 10000000;\
-    position: fixed;\
-    left: 41%;\
-    top: 2%;\
-    width: 200px;\
-      ">\
-      <a class="close" id= "closeMyFlash" href="#">×</a>\
-      <p>Change reverted</p>\
-    </div>\
-    ');
-    $('#ContextlyFlashesHolder').prepend('\
-     <div id="failRevertFlash" class="hide alert alert-error" style="\
-    z-index: 10000000;\
-    position: fixed;\
-    left: 41%;\
-    top: 2%;\
-    width: 200px;\
-      ">\
-      <a class="close" id= "closeMyFlash" href="#">×</a>\
-      <p>No changes to revert</p>\
-    </div>\
-    ');
+    flashList = [
+      {
+        flashName: "draggableFlash",
+        message: "<p>Element made draggable</p>"
+      }, {
+        flashName: "changeFontFlash",
+        message: "<p>Font changed</p>"
+      }, {
+        flashName: "wrapClassFlash",
+        message: "<p>Element wrapped in specified div</p>"
+      }, {
+        flashName: "addToClassFlash",
+        message: "<p>Element added to specified div</p>"
+      }, {
+        flashName: "changeTagNameFlash",
+        message: "<p>Element\'s tagName changed</p>"
+      }, {
+        flashName: "modifyClassFlash",
+        message: "<p>Class changed</p>"
+      }, {
+        flashName: "resizableFlash",
+        message: "<p>Element made resizable</p>"
+      }, {
+        flashName: "revertFlash",
+        message: "<p>Change reverted</p>"
+      }, {
+        flashName: "failRevertFlash",
+        message: "<p>No changes to revert</p>"
+      }
+    ];
+    allFlashes = (function() {
+      var _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = flashList.length; _i < _len; _i++) {
+        flash = flashList[_i];
+        _results.push(flashTemplate1 + flash.flashName + flashTemplate2 + flash.message + flashTemplate3);
+      }
+      return _results;
+    })();
+    for (_i = 0, _len = allFlashes.length; _i < _len; _i++) {
+      flash = allFlashes[_i];
+      $('#ContextlyFlashesHolder').append(flash);
+    }
     $('body').append('\
     <div id="ContextlyModalsHolder"></div>\
     ');
@@ -398,7 +336,7 @@
     ');
     modalDown = false;
     $(document).bind('keypress', function(e) {
-      var action, classToAdd, classToAddLastChild, color, content, currFontSize, currTagName, details, element, fontStyle, fontWeight, index, method, parent, tagName;
+      var action, classToAdd, classToAddLastChild, color, content, currFontSize, currTagName, details, element, fontStyle, fontWeight, height, index, method, parent, tagName, width;
       if (event.shiftKey && event.which === 72) {
         $("#helpModal").modal();
       }
@@ -492,11 +430,19 @@
             $(element).css("font-style", details.fontStyle);
             return $(element).css("font-weight", details.fontWeight);
           } else if (method === "resizable") {
-            $(element).animate({
-              "height": "" + details.height,
-              "width": "" + details.width
+            height = details.height;
+            width = details.width;
+            $(element).tooltip('destroy');
+            return $(element).animate({
+              "height": "" + height,
+              "width": "" + width
+            }, 250, "linear", function() {
+              return $(element).tooltip({
+                placement: 'bottom',
+                trigger: 'manual',
+                title: "new height: " + height + ", new width: " + width
+              }).tooltip('show');
             });
-            return $(element).tooltip('destroy');
           } else if (method === "draggable" || "classDraggable") {
             $(element).animate({
               "top": "0px",

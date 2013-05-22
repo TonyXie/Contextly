@@ -144,136 +144,42 @@ $(document).ready ->
 #############################################################################
 #############################################################################
 
+  # flashes template
+  flashTemplate1 = "<div id="
+  flashTemplate2 = " class='hide alert alert-success' style='
+    z-index: 10000000;
+    position: fixed;
+    left: 41%;
+    top: 2%;
+    width: 200px;
+    text-align: center;
+      '>
+      <a class='close' id= 'closeMyFlash' href='#'>×</a>"
+  flashTemplate3 = "</div>"
+
   # make container to put all the flashes into 
   $('body').append('
     <div id="ContextlyFlashesHolder"></div>
     ')
 
-  # info flash messages 
-  $('#ContextlyFlashesHolder').prepend('
-     <div id="draggableFlash" class="hide alert alert-success" style="
-    z-index: 10000000;
-    position: fixed;
-    left: 41%;
-    top: 2%;
-    width: 200px;
-      ">
-      <a class="close" id= "closeMyFlash" href="#">×</a>
-      <p>Element made draggable</p>
-    </div>
-    ')
+  # OMG I ACTUALLY GET TO USE LIST COMPREHENSION!??821893?!?
+  flashList = [ {flashName: "draggableFlash", message: "<p>Element made draggable</p>"}, 
+                {flashName: "changeFontFlash", message: "<p>Font changed</p>" }, 
+                {flashName: "wrapClassFlash", message: "<p>Element wrapped in specified div</p>" },
+                {flashName: "addToClassFlash", message: "<p>Element added to specified div</p>" },
+                {flashName: "changeTagNameFlash", message: "<p>Element\'s tagName changed</p>" },
+                {flashName: "modifyClassFlash", message: "<p>Class changed</p>" },
+                {flashName: "resizableFlash", message: "<p>Element made resizable</p>" },
+                {flashName: "revertFlash", message: "<p>Change reverted</p>" },
+                {flashName: "failRevertFlash", message: "<p>No changes to revert</p>" },
+              ]
 
-  # info change font message
-  $('#ContextlyFlashesHolder').prepend('
-     <div id="changeFontFlash" class="hide alert alert-success" style="
-    z-index: 10000000;
-    position: fixed;
-    left: 41%;
-    top: 2%;
-    width: 200px;
-      ">
-      <a class="close" id= "closeMyFlash" href="#">×</a>
-      <p>Font changed</p>
-    </div>
-    ')
+  # get all the flashes
+  allFlashes = (flashTemplate1 + flash.flashName + flashTemplate2 + flash.message + flashTemplate3 for flash in flashList)
 
-  # info wrap class messages 
-  $('#ContextlyFlashesHolder').prepend('
-     <div id="wrapClassFlash" class="hide alert alert-success" style="
-    z-index: 10000000;
-    position: fixed;
-    left: 41%;
-    top: 2%;
-    width: 230px;
-      ">
-      <a class="close" id= "closeMyFlash" href="#">×</a>
-      <p>Element wrapped in specified div</p>
-    </div>
-    ')
-
-  # info add to div messages 
-  $('#ContextlyFlashesHolder').prepend('
-     <div id="addToClassFlash" class="hide alert alert-success" style="
-    z-index: 10000000;
-    position: fixed;
-    left: 41%;
-    top: 2%;
-    width: 230px;
-      ">
-      <a class="close" id= "closeMyFlash" href="#">×</a>
-      <p>Element added to specified div</p>
-    </div>
-    ')
-
-  # info change tagName messages 
-  $('#ContextlyFlashesHolder').prepend('
-     <div id="changeTagNameFlash" class="hide alert alert-success" style="
-    z-index: 10000000;
-    position: fixed;
-    left: 41%;
-    top: 2%;
-    width: 200px;
-      ">
-      <a class="close" id= "closeMyFlash" href="#">×</a>
-      <p>Element\'s tagName changed</p>
-    </div>
-    ')
-
-  # info modify class messages 
-  $('#ContextlyFlashesHolder').prepend('
-     <div id="modifyClassFlash" class="hide alert alert-success" style="
-    z-index: 10000000;
-    position: fixed;
-    left: 41%;
-    top: 2%;
-    width: 200px;
-      ">
-      <a class="close" id= "closeMyFlash" href="#">×</a>
-      <p>Class changed</p>
-    </div>
-    ')
-
-  # info resizable messages 
-  $('#ContextlyFlashesHolder').prepend('
-     <div id="resizableFlash" class="hide alert alert-success" style="
-    z-index: 10000000;
-    position: fixed;
-    left: 41%;
-    top: 2%;
-    width: 200px;
-      ">
-      <a class="close" id= "closeMyFlash" href="#">×</a>
-      <p>Element made resizable</p>
-    </div>
-    ')
-
-  # info revert messages 
-  $('#ContextlyFlashesHolder').prepend('
-     <div id="revertFlash" class="hide alert alert-success" style="
-    z-index: 10000000;
-    position: fixed;
-    left: 41%;
-    top: 2%;
-    width: 200px;
-      ">
-      <a class="close" id= "closeMyFlash" href="#">×</a>
-      <p>Change reverted</p>
-    </div>
-    ')
-
-  # info fail revert messages 
-  $('#ContextlyFlashesHolder').prepend('
-     <div id="failRevertFlash" class="hide alert alert-error" style="
-    z-index: 10000000;
-    position: fixed;
-    left: 41%;
-    top: 2%;
-    width: 200px;
-      ">
-      <a class="close" id= "closeMyFlash" href="#">×</a>
-      <p>No changes to revert</p>
-    </div>
-    ')
+  # append all the flashes to the flash container
+  for flash in allFlashes
+    $('#ContextlyFlashesHolder').append(flash)
 
 #############################################################################
 #############################################################################
@@ -612,8 +518,18 @@ $(document).ready ->
           $(element).css("font-weight", details.fontWeight)  
 
         else if method is "resizable"
-          $(element).animate {"height" : "#{details.height}", "width" : "#{details.width}"}
+          height = details.height
+          width = details.width
           $(element).tooltip('destroy') 
+
+          $(element).animate {"height" : "#{height}", "width" : "#{width}"}, 250, "linear", ->
+
+            # put height + width tooltip on bottom
+            $(element).tooltip({
+              placement: 'bottom'
+              trigger: 'manual'
+              title: "new height: #{height}, new width: #{width}"
+            }).tooltip('show')
 
         else if method is "draggable" or "classDraggable"
           # revert to original position. Only have to change "left" and "top" 
