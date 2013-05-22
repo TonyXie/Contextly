@@ -144,6 +144,11 @@ $(document).ready ->
 #############################################################################
 #############################################################################
 
+  # make container to put all the flashes into 
+  $('body').append('
+    <div id="ContextlyFlashesHolder"></div>
+    ')
+
   # flashes template
   flashTemplate1 = "<div id="
   flashTemplate2 = " class='hide alert alert-success' style='
@@ -156,11 +161,6 @@ $(document).ready ->
       '>
       <a class='close' id= 'closeMyFlash' href='#'>×</a>"
   flashTemplate3 = "</div>"
-
-  # make container to put all the flashes into 
-  $('body').append('
-    <div id="ContextlyFlashesHolder"></div>
-    ')
 
   # OMG I ACTUALLY GET TO USE LIST COMPREHENSION!??821893?!?
   flashList = [ {flashName: "draggableFlash", message: "<p>Element made draggable</p>"}, 
@@ -192,57 +192,48 @@ $(document).ready ->
     <div id="ContextlyModalsHolder"></div>
     ')
 
-  # modal for changing font 
-  $('#ContextlyModalsHolder').append('
-      <!-- Modal -->
-      <div id="fontModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-          <h3 id="myModalLabel">Change font</h3>
-        </div>
-        <div class="modal-body">
-          <select name="font-list" id="font-list">
-            <option value="Helvetica">Helvetica</option>
-            <option value="Raleway">Raleway</option>
-            <option value="Gabriela"> Gabriela </option>
-            <option value="Abril+Fatface">Abril Fatface</option>
-            <option value="Gentium+Book+Basic">Gentium Book Basic</option>
-            <option value="Gravitas+One">Gravitas One</option>
-            <option value="Lato">Lato</option>
-            <option value="Merriweather">Merriweather</option>
-            <option value="Old+Standard+TT">Old Standard TT</option>
-            <option value="Open+Sans">Open Sans</option>
-            <option value="Oswald">Oswald</option>
-            <option value="Playfair+Display">Playfair Display</option>
-            <option value="PT+Sans">PT Sans</option>
-            <option value="PT+Mono">PT Mono</option>
-            <option value="PT+Sans+Narrow">PT Sans Narrow</option>
-            <option value="PT+Serif">PT Serif</option>
-            <option value="Vollkorn">Vollkorn</option>
-            <option value="Abel">Abel</option>
-          </select>
-        <textarea name="Tony" id="changeFontSize" style="width: 280px"cols="1" rows="1">Current font size:</textarea>
-        <textarea name="Tony" id="changeFontStyle" style="width: 280px"cols="1" rows="1">Current font-style:</textarea>
-        <textarea name="Tony" id="changeFontWeight" style="width: 280px"cols="1" rows="1">Current font-weight:</textarea>
-        <b style="font-size: 20px">R</b><input style="width: 50px" id="fontColorR">
-        <b style="font-size: 20px">G</b><input style="width: 50px" id="fontColorG">
-        <b style="font-size: 20px">B</b><input style="width: 50px" id="fontColorB">
-        </div>
-        <div class="modal-footer">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-          <button id="fontChange" class="btn btn-primary" data-dismiss="modal">Save changes</button>
-        </div>
-      </div>  
-    ')
-  
-  # Keyboard shortcuts modal
-  $('#ContextlyModalsHolder').append('
-      <!-- Modal -->
-      <div id="helpModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-          <h3 id="myModalLabel">Help Menu</h3>
-        </div>
-        <div class="modal-body">
-          <p> Click elements to select them! Contextly only works on localhost or file:/// urls </p>
+  # modal templates 
+  modalTemplate1 = "<div id="
+  modalTemplate2 =  ' class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-header"><h3 id="myModalLabel">'
+  modalTemplate3 = '</h3></div><div class="modal-body">'
+  modalTemplate4 = '</div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button><button id="'
+  modalTemplate5 = '" class="btn btn-primary" data-dismiss="modal">Save changes</button></div></div>'
+
+  # OMG USE LIST COMPREHENSION YET AGAIN!?!?
+
+  # list of all modal attributes needed
+  modalList = [ 
+      # fontModal 
+      {id: "fontModal", title: "Change font", body: '<select name="font-list" id="font-list">
+          <option value="Helvetica">Helvetica</option>
+          <option value="Raleway">Raleway</option>
+          <option value="Gabriela"> Gabriela </option>
+          <option value="Abril+Fatface">Abril Fatface</option>
+          <option value="Gentium+Book+Basic">Gentium Book Basic</option>
+          <option value="Gravitas+One">Gravitas One</option>
+          <option value="Lato">Lato</option>
+          <option value="Merriweather">Merriweather</option>
+          <option value="Old+Standard+TT">Old Standard TT</option>
+          <option value="Open+Sans">Open Sans</option>
+          <option value="Oswald">Oswald</option>
+          <option value="Playfair+Display">Playfair Display</option>
+          <option value="PT+Sans">PT Sans</option>
+          <option value="PT+Mono">PT Mono</option>
+          <option value="PT+Sans+Narrow">PT Sans Narrow</option>
+          <option value="PT+Serif">PT Serif</option>
+          <option value="Vollkorn">Vollkorn</option>
+          <option value="Abel">Abel</option>
+        </select>
+      <textarea name="Tony" id="changeFontSize" style="width: 280px"cols="1" rows="1">Current font size:</textarea>
+      <textarea name="Tony" id="changeFontStyle" style="width: 280px"cols="1" rows="1">Current font-style:</textarea>
+      <textarea name="Tony" id="changeFontWeight" style="width: 280px"cols="1" rows="1">Current font-weight:</textarea>
+      <b style="font-size: 20px">R</b><input style="width: 50px" id="fontColorR">
+      <b style="font-size: 20px">G</b><input style="width: 50px" id="fontColorG">
+      <b style="font-size: 20px">B</b><input style="width: 50px" id="fontColorB">', submitId: "fontChange"}, 
+
+      # help menu
+      {id: "helpModal", title: "Help Menu", 
+      body: "<p> Click elements to select them! Contextly only works on localhost or file:/// urls </p>
           <p>Help menu: Shift + H</p>
           <p>Change font-styles: Shift + F</p>
           <p>Wrap element with class: Shift + W</p>
@@ -252,121 +243,54 @@ $(document).ready ->
           <p>Add element to existing div: Shift + A</p>
           <p>Choose element to make resizable: Shift + R</p>
           <p>Modify existing class: Shift + M</p>
-          <p>Undo last change: Shift + Z</p>
-        </div>
-        <div class="modal-footer">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        </div>
-      </div>  
-    ')
+          <p>Undo last change: Shift + Z</p>",
+      submitId: ""}, 
 
-  # wrap element in specified class modal
-  $('#ContextlyModalsHolder').append('
-      <!-- Modal -->
-      <div id="wrapElementModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-          <h3 id="myModalLabel">Wrap Element Menu</h3>
-        </div>
-        <div class="modal-body">
-          <b style="font-size: 50px">.</b><textarea name="Tony" id="wrapElememtArea" cols="1" rows="1">Wrap element class:</textarea>
-        </div>
-        <div class="modal-footer">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-          <button id="wrapElement" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
-        </div>
-      </div>  
-    ')
+      # wrap element in div
+      {id: "wrapElementModal", title:"Wrap Element Menu",
+      body: '<b style="font-size: 50px">.</b><textarea name="Tony" id="wrapElememtArea" cols="1" rows="1">Wrap element class:</textarea>', 
+      submitId: "wrapElement"}, 
 
-  # make class draggable
-  $('#ContextlyModalsHolder').append('
-    <!-- Modal -->
-    <div id="makeClassDraggable" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-header">
-        <h3 id="myModalLabel">Make class draggable</h3>
-      </div>
-      <div class="modal-body">
-        <b style="font-size: 50px">.</b><textarea name="Tony" id="draggableClassArea" cols="1" rows="1">Make class draggable:</textarea>
-        <b style="font-size: 30px">#</b><textarea name="Tony" id="draggableIdArea" cols="1" rows="1">Choose id to add element to:</textarea>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button id="makeClassDraggableSubmit" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
-      </div>
-    </div>  
-  ')
+      # make a class draggable
+      {id: "makeClassDraggable", title:"Make class draggable",
+      body: '<b style="font-size: 50px">.</b><textarea name="Tony" id="draggableClassArea" cols="1" rows="1">Make class draggable:</textarea>
+        <b style="font-size: 30px">#</b><textarea name="Tony" id="draggableIdArea" cols="1" rows="1">Choose id to add element to:</textarea>', 
+      submitId:"makeClassDraggableSubmit"}, 
 
-  # change tagName modal
-  $('#ContextlyModalsHolder').append('
-      <!-- Modal -->
-      <div id="changeTagNameModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-          <h3 id="myModalLabel">Change tagName</h3>
-        </div>
-        <div class="modal-body">
-          <textarea name="Tony" id="changeTagNameArea" cols="1" rows="1">change tagName to:</textarea>
-        </div>
-        <div class="modal-footer">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-          <button id="changeTagNameSubmit" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
-        </div>
-      </div>  
-    ')
+      # change tagName
+      {id: "changeTagNameModal", title:"Change tagName", 
+      body: '<textarea name="Tony" id="changeTagNameArea" cols="1" rows="1">change tagName to:</textarea>'
+        , 
+      submitId: "changeTagNameSubmit"},
 
-  # add element to existing div modal
-  $('#ContextlyModalsHolder').append('
-      <!-- Modal -->
-      <div id="addElementToDivModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-          <h3 id="myModalLabel">Add Element to Existing Div</h3>
-        </div>
-        <div class="modal-body">
+      # add element to existing div 
+      {id: "addElementToDivModal", title: "Add Element to Existing Div", 
+      body: '<div class="modal-body">
           <b style="font-size: 50px">.</b><textarea name="Tony" id="addElementToDivArea" cols="1" rows="1">Choose class to add element to:</textarea>
-          <b style="font-size: 30px">#</b><textarea name="Tony" id="addElementToIdArea" cols="1" rows="1">Choose id to add element to:</textarea>
-        </div>
-        <div class="modal-footer">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-          <button id="addElementToDiv" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
-        </div>
-      </div>  
-    ')
+          <b style="font-size: 30px">#</b><textarea name="Tony" id="addElementToIdArea" cols="1" rows="1">Choose id to add element to:</textarea>', 
+      submitId: "addElementToDiv" }, 
 
-  # make class resizable modal
-  $('#ContextlyModalsHolder').append('
-      <!-- Modal -->
-      <div id="resizableModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-          <h3 id="myModalLabel">Make Div Resizable</h3>
-        </div>
-        <div class="modal-body">
-          <b style="font-size: 50px">.</b><textarea name="Tony" id="resizableClassArea" cols="1" rows="1">Choose class to make resizable:</textarea>
-          <b style="font-size: 30px">#</b><textarea name="Tony" id="resizableIdDivArea" cols="1" rows="1">Choose id to add element to:</textarea>
-        </div>
-        <div class="modal-footer">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-          <button id="makeResizable" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
-        </div>
-      </div>  
-    ')
+      # make class resizable
+      {id: "resizableModal", title: "Make Div Resizable", 
+      body: '<b style="font-size: 50px">.</b><textarea name="Tony" id="resizableClassArea" cols="1" rows="1">Choose class to make resizable:</textarea>
+          <b style="font-size: 30px">#</b><textarea name="Tony" id="resizableIdDivArea" cols="1" rows="1">Choose id to add element to:</textarea>', 
+      submitId: "makeResizable" }, 
 
-  # change class css attributes modal
-  $('#ContextlyModalsHolder').append('
-      <!-- Modal -->
-      <div id="modifyClassModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-          <h3 id="myModalLabel">Change class things</h3>
-        </div>
-        <div class="modal-body">
-          <b style="font-size: 50px">.</b><textarea name="Tony" id="modifyClassArea" cols="1" rows="1">Choose class</textarea>
+      # change class css attributes
+      {id: "modifyClassModal", title: "Change class things", 
+      body: '<b style="font-size: 50px">.</b><textarea name="Tony" id="modifyClassArea" cols="1" rows="1">Choose class</textarea>
             <textarea name="Tony" id="modifyClassBackgroundColor" cols="1" rows="1">Background color?</textarea>
             <textarea name="Tony" id="modifyClassAreaHeight" cols="1" rows="1">Height</textarea>
-            <textarea name="Tony" id="modifyClassAreaWidth" cols="1" rows="1">Width</textarea>
-        </div>
-        <div class="modal-footer">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-          <button id="modifyClass" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
-        </div>
-      </div>  
-    ')
+            <textarea name="Tony" id="modifyClassAreaWidth" cols="1" rows="1">Width</textarea>',
+      submitId: "modifyClass"}
+      ]
+
+  # use list comprehension yet again to get a list of all modals needed
+  allModals = (modalTemplate1 + modal.id + modalTemplate2 + modal.title + modalTemplate3 + modal.body + modalTemplate4 + modal.submitId + modalTemplate5 for modal in modalList)
+
+  # append the modals to the modal holder
+  for modal in allModals
+    $('#ContextlyModalsHolder').append(modal)
 
 #############################################################################
 #############################################################################
