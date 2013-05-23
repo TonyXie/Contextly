@@ -5,7 +5,7 @@
 #############################################################################
 
 # "Classic" linked list implementation that doesn't keep track of its size.
-# Taken from https://github.com/jashkenas/coffee-script/blob/master/examples/computer_science/linked_list.coffee
+# Copied from https://github.com/jashkenas/coffee-script/blob/master/examples/computer_science/linked_list.coffee
 class LinkedList
 
   ->
@@ -127,7 +127,7 @@ class LinkedList
   toString: -> this.toArray().toString()
 
 
-# Tests.
+# list of commands done for revert
 commandList = new LinkedList
 
 #############################################################################
@@ -163,15 +163,15 @@ $(document).ready ->
   flashTemplate3 = "</div>"
 
   # OMG I ACTUALLY GET TO USE LIST COMPREHENSION!??821893?!?
-  flashList = [ {flashName: "draggableFlash", message: "<p>Element made draggable</p>"}, 
-                {flashName: "changeFontFlash", message: "<p>Font changed</p>" }, 
-                {flashName: "wrapClassFlash", message: "<p>Element wrapped in specified div</p>" },
-                {flashName: "addToClassFlash", message: "<p>Element added to specified div</p>" },
+  flashList = [ {flashName: "draggableFlash",     message: "<p>Element made draggable</p>"}, 
+                {flashName: "changeFontFlash",    message: "<p>Font changed</p>" }, 
+                {flashName: "wrapClassFlash",     message: "<p>Element wrapped in specified div</p>" },
+                {flashName: "addToClassFlash",    message: "<p>Element added to specified div</p>" },
                 {flashName: "changeTagNameFlash", message: "<p>Element\'s tagName changed</p>" },
-                {flashName: "modifyClassFlash", message: "<p>Class changed</p>" },
-                {flashName: "resizableFlash", message: "<p>Element made resizable</p>" },
-                {flashName: "revertFlash", message: "<p>Change reverted</p>" },
-                {flashName: "failRevertFlash", message: "<p>No changes to revert</p>" },
+                {flashName: "modifyClassFlash",   message: "<p>Class changed</p>" },
+                {flashName: "resizableFlash",     message: "<p>Element made resizable</p>" },
+                {flashName: "revertFlash",        message: "<p>Change reverted</p>" },
+                {flashName: "failRevertFlash",    message: "<p>No changes to revert</p>" },
               ]
 
   # get all the flashes
@@ -203,8 +203,10 @@ $(document).ready ->
 
   # list of all modal attributes needed
   modalList = [ 
+  
       # fontModal 
-      {id: "fontModal", title: "Change font", body: '<select name="font-list" id="font-list">
+      {id: "fontModal", title: "Change font", 
+      body: '<select name="font-list" id="font-list">
           <option value="Helvetica">Helvetica</option>
           <option value="Raleway">Raleway</option>
           <option value="Gabriela"> Gabriela </option>
@@ -229,7 +231,8 @@ $(document).ready ->
       <textarea name="Tony" id="changeFontWeight" style="width: 280px"cols="1" rows="1">Current font-weight:</textarea>
       <b style="font-size: 20px">R</b><input style="width: 50px" id="fontColorR">
       <b style="font-size: 20px">G</b><input style="width: 50px" id="fontColorG">
-      <b style="font-size: 20px">B</b><input style="width: 50px" id="fontColorB">', submitId: "fontChange"}, 
+      <b style="font-size: 20px">B</b><input style="width: 50px" id="fontColorB">', 
+      submitId: "fontChange"}, 
 
       # help menu
       {id: "helpModal", title: "Help Menu", 
@@ -254,7 +257,7 @@ $(document).ready ->
       # make a class draggable
       {id: "makeClassDraggable", title:"Make class draggable",
       body: '<b style="font-size: 50px">.</b><textarea name="Tony" id="draggableClassArea" cols="1" rows="1">Make class draggable:</textarea>
-        <b style="font-size: 30px">#</b><textarea name="Tony" id="draggableIdArea" cols="1" rows="1">Choose id to add element to:</textarea>', 
+        <b style="font-size: 30px">#</b><textarea name="Tony" id="draggableIdArea" cols="1" rows="1">Choose id to make draggable:</textarea>', 
       submitId:"makeClassDraggableSubmit"}, 
 
       # change tagName
@@ -273,11 +276,11 @@ $(document).ready ->
       # make class resizable
       {id: "resizableModal", title: "Make Div Resizable", 
       body: '<b style="font-size: 50px">.</b><textarea name="Tony" id="resizableClassArea" cols="1" rows="1">Choose class to make resizable:</textarea>
-          <b style="font-size: 30px">#</b><textarea name="Tony" id="resizableIdDivArea" cols="1" rows="1">Choose id to add element to:</textarea>', 
+          <b style="font-size: 30px">#</b><textarea name="Tony" id="resizableIdDivArea" cols="1" rows="1">Choose id to make resizable:</textarea>', 
       submitId: "makeResizable" }, 
 
       # change class css attributes
-      {id: "modifyClassModal", title: "Change class things", 
+      {id: "modifyClassModal", title: "Change class attributes", 
       body: '<b style="font-size: 50px">.</b><textarea name="Tony" id="modifyClassArea" cols="1" rows="1">Choose class</textarea>
             <textarea name="Tony" id="modifyClassBackgroundColor" cols="1" rows="1">Background color?</textarea>
             <textarea name="Tony" id="modifyClassAreaHeight" cols="1" rows="1">Height</textarea>
@@ -627,8 +630,6 @@ $(document).ready ->
     $('#resizableFlash').fadeIn 1500, ->
       $(this).fadeOut()
 
-    
-
 # ---------------------------- MAKE DIV DRAGGABLE------------------------------
 
   $('body').on 'click', '#makeClassDraggableSubmit', (e) ->
@@ -706,10 +707,7 @@ $(document).ready ->
       $(this).fadeOut()
 
 # ---------------------------- GET CLICKED ELEMENT-----------------------------
-  $('body').on "click", "h1, h2, h3, p, a, li, img", (e) -> 
-
-    # prevent default
-    e.preventDefault()
+  $('body').on "click", "h1, h2, h3, h4, h5, h6, p, a, li, img", (e) -> 
 
     # get clicked element
     x = $(this)
@@ -783,7 +781,6 @@ changeTagName  = (tagName) ->
 
     # update the old commandList so when we are undoing changes it knows to take the fact that 
     # the node was replaced into account
-
     commandList.updateAllElement element, $('.changeTagNameTarget')
 
 # method for adding element to existing div 

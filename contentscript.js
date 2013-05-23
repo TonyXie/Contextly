@@ -224,7 +224,7 @@
         id: "makeClassDraggable",
         title: "Make class draggable",
         body: '<b style="font-size: 50px">.</b><textarea name="Tony" id="draggableClassArea" cols="1" rows="1">Make class draggable:</textarea>\
-        <b style="font-size: 30px">#</b><textarea name="Tony" id="draggableIdArea" cols="1" rows="1">Choose id to add element to:</textarea>',
+        <b style="font-size: 30px">#</b><textarea name="Tony" id="draggableIdArea" cols="1" rows="1">Choose id to make draggable:</textarea>',
         submitId: "makeClassDraggableSubmit"
       }, {
         id: "changeTagNameModal",
@@ -242,11 +242,11 @@
         id: "resizableModal",
         title: "Make Div Resizable",
         body: '<b style="font-size: 50px">.</b><textarea name="Tony" id="resizableClassArea" cols="1" rows="1">Choose class to make resizable:</textarea>\
-          <b style="font-size: 30px">#</b><textarea name="Tony" id="resizableIdDivArea" cols="1" rows="1">Choose id to add element to:</textarea>',
+          <b style="font-size: 30px">#</b><textarea name="Tony" id="resizableIdDivArea" cols="1" rows="1">Choose id to make resizable:</textarea>',
         submitId: "makeResizable"
       }, {
         id: "modifyClassModal",
-        title: "Change class things",
+        title: "Change class attributes",
         body: '<b style="font-size: 50px">.</b><textarea name="Tony" id="modifyClassArea" cols="1" rows="1">Choose class</textarea>\
             <textarea name="Tony" id="modifyClassBackgroundColor" cols="1" rows="1">Background color?</textarea>\
             <textarea name="Tony" id="modifyClassAreaHeight" cols="1" rows="1">Height</textarea>\
@@ -543,9 +543,8 @@
         return $(this).fadeOut();
       });
     });
-    return $('body').on("click", "h1, h2, h3, p, a, li, img", function(e) {
+    return $('body').on("click", "h1, h2, h3, h4, h5, h6, p, a, li, img", function(e) {
       var x;
-      e.preventDefault();
       x = $(this);
       $('.clicked').css('background-color', '');
       $('.clicked').removeClass('clicked');
