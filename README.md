@@ -5,7 +5,7 @@
 
 <p> Simply download the the extension, go to a localhost server or file:/// url and press ctrl+h to begin.</p>
 
-<ul>Features include:</ul>
+<ul>Features include:
 <li>Help menu: Shift + H</li>
 <li>Change font-styles: Shift + F</li>
 <li>Wrap element with class: Shift + W</li>
@@ -15,4 +15,5 @@
 <li>Add element to existing div: Shift + A</li>
 <li>Choose element to make resizable: Shift + R</li>
 <li>Modify existing class: Shift + M</li>
-<li>Undo last change: Shift + Z</li>",
+<li>Undo last change: Shift + Z</li>
+</ul>
